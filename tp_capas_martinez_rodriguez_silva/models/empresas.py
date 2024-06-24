@@ -8,4 +8,4 @@ class Empresa (Model):
     
     class Meta:
         db = db_obras.db
-        db_table = 'empresas'
+        db_table = 'Empresa'

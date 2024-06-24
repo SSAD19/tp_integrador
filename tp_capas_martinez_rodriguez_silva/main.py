@@ -1,9 +1,21 @@
-from negocio.carga_datos import *
+from sqlite3 import OperationalError
+from  utils.db_obras import *
+from models import *
+from peewee import *
 
 
-if __name__ == '__main__':
   
+def main():  
   
+  db_sqlite = BaseDatos()
+  
+  db_sqlite.abrirConex()
+  
+  db_sqlite.crearTabla('Empresa')
+  
+  db_sqlite.cerrarConex()
+  
+  input("presione enter para culminar")
   
   
   
@@ -13,18 +25,6 @@ if __name__ == '__main__':
     carga = CargaDatos()
     carga.cargarDatosPrevios()
 
-
-
-
-
-
-
-
-
-
-
-
-
     #Una vez cargado los datos del dataset agregar dos nuevas empresas
     #TODO:armar dos empresas
     
@@ -33,3 +33,9 @@ if __name__ == '__main__':
     #Presionar una tecla para culminar
     
   '''
+  
+  
+if __name__ == '__main__':
+  main() 
+    
+   
