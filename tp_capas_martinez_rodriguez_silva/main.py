@@ -7,5 +7,10 @@ if __name__ == '__main__':
   #Importo mis datos csv, paso path o uso el predeterminado
   cargarDatosPrevios()
 
-
+  #Una vez cargado los datos del dataset agregar dos nuevas empresas
+  #TODO:armar dos empresas
+  
+  #Pasar las dos empresas por la totalidad de estados solicitados  
+  
+  #Presionar una tecla para culminar
   
