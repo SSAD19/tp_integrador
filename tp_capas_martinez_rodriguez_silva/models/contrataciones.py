@@ -1,5 +1,5 @@
 from peewee import *
-from tp_capas_martinez_rodriguez_silva.models.tipo_contratacion import TipoContratacion
+from tipo_contratacion import TipoContratacion
 from utils import db_obras
 
 class Contratacion(Model): 
@@ -12,4 +12,3 @@ class Contratacion(Model):
         db_table = 'contrataciones'
 
 
-#TODO: completar

@@ -1,13 +1,22 @@
-from importar_datos import *
-from modelo_orm import *
+from tp_capas_martinez_rodriguez_silva.negocio.importar_datos import *
+from models import *
 
 
-def cargarDatosPrevios(): 
-  #Importo mis datos csv, paso path o uso el predeterminado
-  datos_obras_urbanas = importar_datos()
+
+class CargaDatos:
   
-  #chequeamos nombres columnas
-  imprimir_data(datos_obras_urbanas)
+  def cargarDatosPrevios(): 
+    #Importo mis datos csv, paso path o uso el predeterminado
+    datos_obras_urbanas = importar_datos()
+    
+    #chequeamos nombres columnas
+    imprimir_data(datos_obras_urbanas)
+    
+  
+  def cargarDB(self):
+  
+  
+  
   
   #cargar Empresas 
   datos_obras_urbanas = eliminar_vacios(datos_obras_urbanas, 'licitacion_oferta_empresa')
@@ -21,7 +30,7 @@ def cargarDatosPrevios():
       else:
         cuit = None
         
-      Empresa.create(licitacion_oferta_empresa = i,
+      EmpresaD.create(licitacion_oferta_empresa = i,
                      cuit_contratista =cuit)
       
     except DatabaseError as e: 
