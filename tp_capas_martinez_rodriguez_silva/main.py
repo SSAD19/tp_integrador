@@ -1,25 +1,23 @@
 from sqlite3 import OperationalError
 from  utils.db_obras import *
-from models import empresas as em, area_responsable as ar, contrataciones as con 
-from models import etapa_obra as eo, licitacion as li, obra as ob
-from models import predio as pr, tipo_contratacion as tc, tipo_obra as to
-
-
+from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr
 
   
 def main():  
   
   db_sqlite = BaseDatos()
-  
   db_sqlite.abrirConex()
   
+  
   #falta etap_obra, tipo_obra, obra
-  db_sqlite.crearTabla(em.Empresa, ar.AreaResponsable, con.Contratacion, li.Licitacion, pr.Predio, tc.TipoContratacion)
+  #TODO:Error en tipo contratacion
+  db_sqlite.crearTabla(em.Empresa, ar.AreaResponsable, con.Contratacion, li.Licitacion, pr.Predio)
+  
+  
+  
   
   
   db_sqlite.cerrarConex()
-  
-  
   input("presione enter para culminar")
   
   

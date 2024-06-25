@@ -26,9 +26,9 @@ class BaseDatos:
         except Exception as e:
             print("Error al cerrar la conexión. ", e)
             
-    def crearTabla(self, tabla): 
+    def crearTabla(self, *tabla): 
         try:
-            self.db.create_tables([tabla])
+            self.db.create_tables([*tabla])
             print("Tabla creada")
         except Exception as e:
             print("Error al crear la tabla. ", e)

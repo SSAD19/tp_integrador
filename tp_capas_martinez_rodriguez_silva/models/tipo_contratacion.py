@@ -1,5 +1,5 @@
 from peewee import *
-from base_model import *
+from models.base_model import *
 
 
 class TipoContratacion(BaseModel):

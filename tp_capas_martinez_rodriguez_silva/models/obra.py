@@ -1,7 +1,7 @@
-
+from models.base_model import *
 #TODO: clase obra - COMPLETAR SIGUIENDO ESQUEMA DE LAS CLASES YA HECHAS 
 
-class Obra():
+class Obra(BaseModel):
     
     #TODO: atributos definidos
     #TODO: CLASS META 
