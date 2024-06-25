@@ -1,12 +1,11 @@
 from peewee import *
-from utils import db_obras
+from base_model import *
 
-class Predio(Model):
+class Predio(BaseModel):
     id_predio = AutoField()
     comuna = CharField(unique = True)
     barrio = CharField(unique = True)
     
     class Meta:
-        db = db_obras.db
         db_table = 'predios'
 

@@ -1,8 +1,8 @@
 from peewee import *
-from utils import db_obras
 from area_responsable import *
+from base_model import *
 
-class Licitacion(Model):
+class Licitacion(BaseModel):
     
     nro_expediente = CharField(unique = True, primary_key = True)
     licitacion_anio = DateField.year()
@@ -13,7 +13,6 @@ class Licitacion(Model):
     
     
     class Meta:
-        db = db_obras.db
         db_table= 'licitaciones'    
         
         

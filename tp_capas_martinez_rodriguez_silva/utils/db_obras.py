@@ -2,7 +2,7 @@ from peewee import SqliteDatabase
 from models import *
 
 
-# db = db_sqlite = SqliteDatabase('obras_urbanas.db')
+db_sqlite = SqliteDatabase('obras_urbanas.db')
 
 class BaseDatos:
     
@@ -26,9 +26,9 @@ class BaseDatos:
         except Exception as e:
             print("Error al cerrar la conexión. ", e)
             
-    def crearTabla(self): 
+    def crearTabla(self, tabla): 
         try:
-            self.db.create_tables([Empresa, ])
+            self.db.create_tables([tabla])
             print("Tabla creada")
         except Exception as e:
             print("Error al crear la tabla. ", e)

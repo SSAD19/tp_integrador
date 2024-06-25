@@ -1,13 +1,12 @@
 from peewee import *
-from utils import db_obras
+from base_model import *
 
 
-class TipoContratacion(Model):
+class TipoContratacion(BaseModel):
     id = AutoField(primary_key=True)
     nombre_tipo = CharField(unique = True)
     
     class Meta:
-        db = db_obras.db 
         db_table = 'tipo_contratacion'
 
 

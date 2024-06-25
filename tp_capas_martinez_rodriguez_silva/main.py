@@ -1,7 +1,9 @@
 from sqlite3 import OperationalError
 from  utils.db_obras import *
-from models import *
-from peewee import *
+from models import empresas as em, area_responsable as ar, contrataciones as con 
+from models import etapa_obra as eo, licitacion as li, obra as ob
+from models import predio as pr, tipo_contratacion as tc, tipo_obra as to
+
 
 
   
@@ -11,9 +13,12 @@ def main():
   
   db_sqlite.abrirConex()
   
-  db_sqlite.crearTabla('Empresa')
+  #falta etap_obra, tipo_obra, obra
+  db_sqlite.crearTabla(em.Empresa, ar.AreaResponsable, con.Contratacion, li.Licitacion, pr.Predio, tc.TipoContratacion)
+  
   
   db_sqlite.cerrarConex()
+  
   
   input("presione enter para culminar")
   
