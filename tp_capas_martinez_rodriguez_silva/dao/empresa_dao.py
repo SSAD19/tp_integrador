@@ -1,7 +1,7 @@
-from dao import *
+from dao.dao import *
 from models.empresas import Empresa
 
 class EmpresaDao(BaseDao):
     def __init__(self):
-        super.__init__(Empresa)
+        super().__init__(Empresa)
         

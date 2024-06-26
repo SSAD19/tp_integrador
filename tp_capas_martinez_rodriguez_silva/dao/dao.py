@@ -1,29 +1,39 @@
-
+from peewee import *
 from models import *
 
 class BaseDao:
-    def __init__(self, model) -> None:
+    def __init__(self, model):
         self.model = model
    
      #TODO: Métodos CRUD con models
      
-    def crearModelo(self, *args):
-        query = self.model.create(*args)
-        query.execute()
+    def crearModelo(self, **kwargs):
+        try:
+            self.model.create(**kwargs)
+        except Exception as e: 
+            print(e)
         
     def borrarModelo(self, id):
-        query = self.model.delete().where(self.model.id == id)
-        query.execute()
+        try: 
+            query = self.model.delete().where(self.model.id == id)
+            query.execute()
+        except Exception as e: 
+            print(e)
         
     def traerTodos (self):
-        return list(self.model.select())
-    
+        try: 
+            return list(self.model.select())
+        except Exception as e:
+            print(e) 
+   
+   
+   
     #TODO:  Probar , en caso de no funcionar se modificara por cada entidad en DAO
-    def traerUno (self, pk, pk_search):
-        return self.model.get(pk=pk_search)
+    def traerUno (self, **kwargs):
+        return self.model.get(**kwargs)
     
-    def actualizarModelo (self, pk, pk_search):
-        query = self.model.update().where(pk == pk_search)
+    def actualizarModelo (self, **kwargs):
+        query = self.model.update().where(kwargs)
         query.execute()
     
     

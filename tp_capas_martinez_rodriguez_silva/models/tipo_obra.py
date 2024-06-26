@@ -1,5 +1,10 @@
 from models.base_model import *
-#TODO: clase TipoObra - COMPLETAR SIGUIENDO ESQUEMA DE LAS CLASES YA HECHAS 
 
 class TipoObra(BaseModel):
-    pass
+   
+    id_tipo_obra = AutoField(primary_key=True)
+    nombre = CharField()
+    
+    
+    class Meta:
+        db_table = 'tipos_obra'

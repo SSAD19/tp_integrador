@@ -1,15 +1,11 @@
-from peewee import SqliteDatabase
-from models import *
-from negocio.gestionar_obras import GestionarObra
+from utils import db_obras
 
 
-db_sqlite = SqliteDatabase('obras_urbanas.db')
-
-class BaseDatos(GestionarObra):
+class BaseDatos:
     
-    db = db_sqlite
+    db = db_obras.db_sqlite
     
-    def conectar_db(self) -> bool:
+    def abrirConex(self) -> bool:
         try:
             self.db.connect()
             print("Se conecto")
@@ -17,8 +13,7 @@ class BaseDatos(GestionarObra):
         except Exception as e: 
             print("Error!! ", e)
             return False
-        
-        #TODO:excepciones personalizadas
+        #excepciones personalizadas: 
             
     def cerrarConex(self):
         try: 
@@ -28,13 +23,9 @@ class BaseDatos(GestionarObra):
         except Exception as e:
             print("Error al cerrar la conexión. ", e)
             
-        #TODO: EXCEPCIONES PERSONALIZADAS
-    
-    def mapear_orm(self, *tabla) -> object: 
+    def crearTabla(self, *tabla): 
         try:
             self.db.create_tables([*tabla])
             print("Tabla creada")
         except Exception as e:
             print("Error al crear la tabla. ", e)
-            
-         #TODO: EXCEPCIONES PERSONALIZADAS

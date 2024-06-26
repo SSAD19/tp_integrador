@@ -3,7 +3,7 @@ from models.base_model import *
 
 
 class TipoContratacion(BaseModel):
-    id = AutoField(primary_key=True)
+    id_tipo_contratacion= AutoField(primary_key=True)
     nombre_tipo = CharField(unique = True)
     
     class Meta:
