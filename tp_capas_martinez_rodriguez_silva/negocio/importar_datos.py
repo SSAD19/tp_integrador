@@ -38,7 +38,8 @@ class ManejoDatos(GestionarObra):
         
 
     #Funciones para eliminar los campos vacios 
-    def eliminar_vacios(data, nombreColumna:str):
+    def limpiar_datos(self, data, nombreColumna:str):
+        #en caso de haber algún error en la data retorna sin hacer nada
         if data is False: return
         
         try:
@@ -46,7 +47,7 @@ class ManejoDatos(GestionarObra):
         
         except Exception as e: 
             print("Erros, no se pudo ingresar limpiar los registros. ", e)
-            return
+            return 
         
     #función para eliminar datos repetidos 
     def datos_unique(data, nombreColumna:str):

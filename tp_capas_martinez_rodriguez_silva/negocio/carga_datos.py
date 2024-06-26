@@ -3,8 +3,9 @@ from models import *
 
 
 
-class CargaDatos:
-  
+class CargaDatos(GestionarObra):
+ 
+  '''
   def cargarDatosPrevios(): 
     #Importo mis datos csv, paso path o uso el predeterminado
     datos_obras_urbanas = importar_datos()
@@ -12,11 +13,7 @@ class CargaDatos:
     #chequeamos nombres columnas
     imprimir_data(datos_obras_urbanas)
     
-  
   def cargarDB(self):
-  
-  
-  
   
   #cargar Empresas 
   datos_obras_urbanas = eliminar_vacios(datos_obras_urbanas, 'licitacion_oferta_empresa')
@@ -38,3 +35,4 @@ class CargaDatos:
       
     except Exception as e:
       print(f"Error al crear empresa {e}")
+      '''

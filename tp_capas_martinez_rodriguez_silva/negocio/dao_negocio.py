@@ -1,11 +1,12 @@
+from negocio.gestionar_obras import GestionarObra
 from utils import db_obras
 
 
-class BaseDatos:
+class BaseDatos(GestionarObra):
     
     db = db_obras.db_sqlite
     
-    def abrirConex(self) -> bool:
+    def conectar_db(self) -> bool:
         try:
             self.db.connect()
             print("Se conecto")
@@ -22,8 +23,10 @@ class BaseDatos:
                  print('cerro conexion')
         except Exception as e:
             print("Error al cerrar la conexión. ", e)
-            
-    def crearTabla(self, *tabla): 
+    
+    
+    
+    def mapear_orm(self, *tabla) -> object:
         try:
             self.db.create_tables([*tabla])
             print("Tabla creada")

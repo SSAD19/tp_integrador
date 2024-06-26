@@ -21,11 +21,14 @@ class GestionarObra(abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def limpiar_datos(drlf,*args) -> bool:
+    def limpiar_datos(drlf,*args):
+        #limpiar datos nulos y no accesibles
         pass
     
     @abc.abstractmethod
     def cargar_datos(self, *args) -> None:
+        #TODO: sentencias necesarias para pasar persistir data del dataframe en DB
+        #hacerlo en el mosulo CargaDatos
         pass
     
     @abc.abstractmethod
