@@ -1,6 +1,7 @@
-from negocio.gestionar_obras import *
-from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr, etapa_obra as eo, obra as ob, tipo_contratacion as tc, tipo_obra as to
+from negocio.gestionar_obras import * 
+from models.modelo_orm import *
 from dao import *
+from peewee import *
   
 def main():  
   #Primer bloque creamos nuestra base de datos, conexión 
@@ -8,15 +9,14 @@ def main():
   
   #Creo las tablas necesarias para mi DB desde mis modelos
   #TODO: REVISAR ORDEN DE CREACION DE TABLAS 
-  GestionarObra.mapear_orm(em.Empresa)
-                           #, ar.AreaResponsable, con.Contratacion, li.Licitacion, 
-    #to.TipoObra, tc.TipoContratacion,  eo.EtapaObra,pr.Predio)
-  
-  
+  GestionarObra.mapear_orm(Empresa, AreaResponsable)
   GestionarObra.verTablas()
-  
+  '''
+ 
   data =  GestionarObra.cargar_datos()
   GestionarObra.imprimir_data(data)
+  '''
+  
   #ejemplo de como crear empresa que no se utilizará acá 
   '''try: 
     empresa_dao = EmpresaDao()

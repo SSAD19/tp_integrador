@@ -1,54 +1,58 @@
 import abc
-from peewee import *
+import os
 import pandas as pd
+from peewee import *
 from utils.db_obras import db_sqlite
-#from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr, etapa_obra as eo, obra as ob, tipo_contratacion as tc, tipo_obra as to
+from models.modelo_orm import *
 
-
-
-
-class GestionarObra(abc.ABCMeta):
+class GestionarObra(abc.ABC):
     
+    db = db_sqlite
     #Lógica de negocio asociada a la base de datos 
-    
-    
-    def conectar_db(db = db_sqlite) -> bool:
+    @classmethod
+    def conectar_db(cls) -> bool:
         try:
-            db.connect()
+            cls.db.connect()
             print("Se conecto")
             return True
         except Exception as e: 
             print("Error!! ", e)
             return False
     
-    def mapear_orm(db = db_sqlite, *tabla:Model) -> None: 
+    @classmethod
+    def mapear_orm(cls, *tablas:BaseModel) -> None: 
         try:
-            db.create_tables([*tabla])
+            cls.db.create_tables(tablas)
             print("Tabla creada")
         except Exception as e:
             print("Error al crear la tabla. ", e)
             
          #TODO: EXCEPCIONES PERSONALIZADAS
-    
-    def cerrarConex(db = db_sqlite) -> None:
+    @classmethod
+    def cerrarConex(cls) -> None:
         try: 
-             if not db.is_closed:
-                 db.close()
+             if not cls.db.is_closed:
+                 cls.db.close()
                  print('cerro conexion')
         except Exception as e:
             print("Error al cerrar la conexión. ", e) 
-            
-    def verTablas(db = db_sqlite ) -> None:
+      
+    @classmethod        
+    def verTablas(cls) -> None:
         try:
-            print(db.get_tables())
+            print(cls.db.get_tables())
         except Exception as e:
             print("Error al ver las tablas. ", e)
     
     
     
     #Logica de negocio relacionada a la manipulacion de grandes datos mediante pandas y numpy     
-    def extraer_datos(dataframe = "dataset\observatorio-de-obras-urbanas.csv")-> pd.DataFrame:  
+    @classmethod
+    def extraer_datos(cls, dataframe = None):  
         try:
+            if dataframe is None:
+                dataframe = os.path.join("dataset", "observatorio-de-obras-urbanas.csv")
+            
             data = pd.read_csv(dataframe, sep=",")
             return data
         
@@ -61,7 +65,8 @@ class GestionarObra(abc.ABCMeta):
             return False
     
     #TODO: EXCEPCIONES PERSONALIZADAS
-    def limpiar_datos (data, nombreColumna:str):
+    @classmethod
+    def limpiar_datos (cls,data, nombreColumna:str):
         if data is False: return
         
         try:
@@ -73,7 +78,8 @@ class GestionarObra(abc.ABCMeta):
     
     
      #función para eliminar datos repetidos 
-    def datos_unique(data, nombreColumna:str) -> list:
+    @classmethod
+    def datos_unique(cls,data, nombreColumna:str) -> list:
         if data is False: return
         try:
             return list(data[f'{nombreColumna}'].unique())
@@ -81,8 +87,9 @@ class GestionarObra(abc.ABCMeta):
         except Exception as e:
             print("Erros, no se pudo unificar el listado. ", e)
             return
-        
-    def imprimir_data(data) -> None:
+    
+    @classmethod    
+    def imprimir_data(cls, data) -> None:
         #en caso de haber algún error en la data retorna sin hacer nada
         if data is False: return
         
@@ -95,7 +102,8 @@ class GestionarObra(abc.ABCMeta):
         
          
     #TODO:
-    def cargar_datos(*args) -> None:
+    @classmethod
+    def cargar_datos(cls, *args) -> None:
         #TODO: sentencias necesarias para pasar persistir data del dataframe en DB
         '''
           #cargar Empresas 
@@ -127,9 +135,11 @@ class GestionarObra(abc.ABCMeta):
         pass
     
     #TODO:
-    def nueva_obra(*args) -> None: 
+    @classmethod
+    def nueva_obra(cls, *args) -> None: 
         pass 
     
     #TODO:
-    def obtener_indicadores(*args) -> None: 
+    @classmethod
+    def obtener_indicadores(cls, *args) -> None: 
         pass 
