@@ -9,23 +9,14 @@ def main():
   
   #Creo las tablas necesarias para mi DB desde mis modelos
   #TODO: REVISAR ORDEN DE CREACION DE TABLAS 
-  GestionarObra.mapear_orm(Empresa, AreaResponsable)
+  GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
   GestionarObra.verTablas()
-  '''
- 
-  data =  GestionarObra.cargar_datos()
-  GestionarObra.imprimir_data(data)
-  '''
   
-  #ejemplo de como crear empresa que no se utilizará acá 
-  '''try: 
-    empresa_dao = EmpresaDao()
-    #empresa_dao.crearModelo(razon_social="Mi caminito S.A.", cuit=30123456779, activa=True)
-    lista_empresas = empresa_dao.traerTodos()
-    for i in lista_empresas: print(i.razon_social, i.cuit)
-      
-  except Exception as e:
-    print("error:", e)'''
+
+  data = GestionarObra.extraer_datos()
+  GestionarObra.imprimir_data(data)
+  
+
  
   GestionarObra.cerrarConex()
   input("presione enter para culminar")

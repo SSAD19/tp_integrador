@@ -1,7 +1,7 @@
 import abc
 import os
 import pandas as pd
-from utils.db_obras import db_sqlite
+from utils.db_obras import *
 from models.modelo_orm import *
 
 class GestionarObra(abc.ABC):
@@ -50,9 +50,9 @@ class GestionarObra(abc.ABC):
     def extraer_datos(cls, dataframe = None):  
         try:
             if dataframe is None:
-                dataframe = os.path.join("dataset", "observatorio-de-obras-urbanas.csv")
+                dataframe = ("tp_capas_martinez_rodriguez_silva\\dataset\\observatorio-de-obras-urbanas.csv")
             
-            data = pd.read_csv(dataframe, sep=",")
+            data = pd.read_csv(dataframe, sep=",", skip_blank_lines=True)
             return data
         
         except FileNotFoundError as e:
