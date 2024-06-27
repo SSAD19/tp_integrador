@@ -1,6 +1,6 @@
 from negocio.gestionar_obras import * 
 from models.modelo_orm import *
-from dao import *
+from dao.dao import *
 from peewee import *
   
 def main():  

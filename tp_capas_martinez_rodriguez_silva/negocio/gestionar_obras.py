@@ -1,7 +1,6 @@
 import abc
 import os
 import pandas as pd
-from peewee import *
 from utils.db_obras import db_sqlite
 from models.modelo_orm import *
 
