@@ -52,7 +52,7 @@ class GestionarObra(abc.ABC):
             if dataframe is None:
                 dataframe = ("tp_capas_martinez_rodriguez_silva\\dataset\\observatorio-de-obras-urbanas.csv")
             
-            data = pd.read_csv(dataframe, sep=",", skip_blank_lines=True)
+            data = pd.read_csv(dataframe, sep=";",  encoding='ISO-8859-1',  quotechar='"', skip_blank_lines=True)
             return data
         
         except FileNotFoundError as e:
