@@ -19,10 +19,7 @@ class Obra(BaseModel):
     long = FloatField()
     fecha_inicio = DateField()
     fecha_estimada_fin = DateField()
-   
-
-class Meta:
-    db_table = 'obra'
+    
     
     #TODO: FUNCIONES 
     def nuevo_proyecto(self):
@@ -63,4 +60,10 @@ class Meta:
         pass
     
    
+    
+   
+
+class Meta:
+    db_table = 'obra'
+    
     

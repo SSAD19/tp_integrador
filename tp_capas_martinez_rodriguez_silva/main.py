@@ -1,22 +1,19 @@
-from dao.empresa_dao import EmpresaDao
 from negocio.gestionar_obras import *
-from utils.db_obras import *
-from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr
-from models import etapa_obra as eo, obra as ob, tipo_contratacion as tc, tipo_obra as to
-from dao.dao import *
+from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr, etapa_obra as eo, obra as ob, tipo_contratacion as tc, tipo_obra as to
+from dao import *
   
 def main():  
-  
   #Primer bloque creamos nuestra base de datos, conexión 
   GestionarObra.conectar_db()
   
   #Creo las tablas necesarias para mi DB desde mis modelos
   #TODO: REVISAR ORDEN DE CREACION DE TABLAS 
-  GestionarObra.mapear_orm(em.Empresa, ar.AreaResponsable, con.Contratacion, li.Licitacion, 
-    to.TipoObra, tc.TipoContratacion,  eo.EtapaObra,pr.Predio)
+  GestionarObra.mapear_orm(em.Empresa)
+                           #, ar.AreaResponsable, con.Contratacion, li.Licitacion, 
+    #to.TipoObra, tc.TipoContratacion,  eo.EtapaObra,pr.Predio)
   
   
-  print(GestionarObra.db.get_tables())
+  GestionarObra.verTablas()
   
   data =  GestionarObra.cargar_datos()
   GestionarObra.imprimir_data(data)
@@ -36,6 +33,12 @@ def main():
 
   
 if __name__ == '__main__':
-  main() 
-    
+  try:
+    main() 
+  
+  except ModuleNotFoundError as e:
+    print("Falló la importación de módulos, comuníquese con el desarrollador") 
+  
+  except Exception as e:
+    print("Error:", e)
    

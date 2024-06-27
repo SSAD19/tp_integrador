@@ -1,47 +1,53 @@
 import abc
-from negocio.importar_datos import ManejoDatos
-from utils.db_obras import db_sqlite
+from peewee import *
 import pandas as pd
-import numpy as np
+from utils.db_obras import db_sqlite
+#from models import empresas as em, area_responsable as ar, contrataciones as con, licitacion as li, predio as pr, etapa_obra as eo, obra as ob, tipo_contratacion as tc, tipo_obra as to
+
+
 
 
 class GestionarObra(abc.ABCMeta):
-    #TODO: Revisar en detalle los argumentos pasados para verificarq ue estén correctos y los retornos
-    
     
     #Lógica de negocio asociada a la base de datos 
-    db = db_sqlite
     
-    def conectar_db(self, *args) -> bool:
+    
+    def conectar_db(db = db_sqlite) -> bool:
         try:
-            self.db.connect()
+            db.connect()
             print("Se conecto")
             return True
         except Exception as e: 
             print("Error!! ", e)
             return False
     
-    def mapear_orm(self, *tabla) -> None: 
+    def mapear_orm(db = db_sqlite, *tabla:Model) -> None: 
         try:
-            self.db.create_tables([*tabla])
+            db.create_tables([*tabla])
             print("Tabla creada")
         except Exception as e:
             print("Error al crear la tabla. ", e)
             
          #TODO: EXCEPCIONES PERSONALIZADAS
     
-    def cerrarConex(self):
+    def cerrarConex(db = db_sqlite) -> None:
         try: 
-             if not self.db.is_closed:
-                 self.db.close()
+             if not db.is_closed:
+                 db.close()
                  print('cerro conexion')
         except Exception as e:
             print("Error al cerrar la conexión. ", e) 
+            
+    def verTablas(db = db_sqlite ) -> None:
+        try:
+            print(db.get_tables())
+        except Exception as e:
+            print("Error al ver las tablas. ", e)
     
     
     
     #Logica de negocio relacionada a la manipulacion de grandes datos mediante pandas y numpy     
-    def extraer_datos(self, dataframe = ".\dataset\observatorio-de-obras-urbanas.csv")-> pd.DataFrame:  
+    def extraer_datos(dataframe = "dataset\observatorio-de-obras-urbanas.csv")-> pd.DataFrame:  
         try:
             data = pd.read_csv(dataframe, sep=",")
             return data
@@ -54,8 +60,8 @@ class GestionarObra(abc.ABCMeta):
             print("Error al importar dataset. ", e)
             return False
     
-    @abc.abstractmethod
-    def limpiar_datos(drlf, data, nombreColumna:str):
+    #TODO: EXCEPCIONES PERSONALIZADAS
+    def limpiar_datos (data, nombreColumna:str):
         if data is False: return
         
         try:
@@ -88,10 +94,8 @@ class GestionarObra(abc.ABCMeta):
         #TODO: Chequear como se ven esos datos por consola 
         
          
-    
-    
-    @abc.abstractmethod
-    def cargar_datos(self, *args) -> None:
+    #TODO:
+    def cargar_datos(*args) -> None:
         #TODO: sentencias necesarias para pasar persistir data del dataframe en DB
         '''
           #cargar Empresas 
@@ -122,10 +126,10 @@ class GestionarObra(abc.ABCMeta):
         
         pass
     
-    @abc.abstractmethod
-    def nueva_obra(self, *args) -> None: 
+    #TODO:
+    def nueva_obra(*args) -> None: 
         pass 
     
-    @abc.abstractmethod
-    def obtener_indicadores(self, *args) -> None: 
+    #TODO:
+    def obtener_indicadores(*args) -> None: 
         pass 
