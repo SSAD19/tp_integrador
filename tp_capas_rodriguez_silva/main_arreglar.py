@@ -2,9 +2,8 @@ from negocio.gestionar_obras import *
 from peewee import *
 from pandas import *
   
-def cargando_dataframe_un_campo(dataframe):
-  
-  #TODO:  LIMPIAR PARA NO REPETIR CODIGO
+  # def cargando_dataframe_un_campo(dataframe):
+ 
   # try:
   #   listado = GestionarObra.datos_unique(dataframe, 'area_responsable')
   #   listado_clean = [AreaResponsable(nombre_area= item) for item in listado]
@@ -14,21 +13,22 @@ def cargando_dataframe_un_campo(dataframe):
   #   listado_clean = [TipoObra(nombre= item) for item in listado]
   #   GestionarObra.cargar_datos(TipoObra, listado_clean)
     
-    listado = GestionarObra.datos_unique(dataframe, 'contratacion_tipo')
-    listado_clean = [TipoContratacion(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(TipoContratacion, listado_clean)
+  #   listado = GestionarObra.datos_unique(dataframe, 
+  #                                        'contratacion_tipo')
+  #   listado_clean = [TipoContratacion(nombre= item) for item in listado]
+  #   GestionarObra.cargar_datos(TipoContratacion, listado_clean)
     
-    listado = GestionarObra.datos_unique(dataframe, 'etapa')
-    listado_clean = [EtapaObra(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(EtapaObra, listado_clean)
+  #   listado = GestionarObra.datos_unique(dataframe, 'etapa')
+  #   listado_clean = [EtapaObra(nombre= item) for item in listado]
+  #   GestionarObra.cargar_datos(EtapaObra, listado_clean)
     
-    listado = GestionarObra.datos_unique(dataframe, 'barrio')
-    listado_clean = [Predio(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(Predio, listado_clean)
+  #   listado = GestionarObra.datos_unique(dataframe, 'barrio')
+  #   listado_clean = [Predio(nombre= item) for item in listado]
+  #   GestionarObra.cargar_datos(Predio, listado_clean)
   
   
-  except Exception as e:
-    print("Error al cargar los datos")
+  # except Exception as e:
+  #   print("Error al cargar los datos")
 
 def main_revisando():  
   #Primer bloque creamos nuestra base de datos, conexión 
