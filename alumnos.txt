@@ -1,6 +1,5 @@
 Proyecto Final integrador de POO 
 Integrantes: 
-    Nicolás Martínez
     Stephany Rodríguez 
     Stefania Silva 
     

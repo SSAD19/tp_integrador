@@ -58,7 +58,7 @@ class GestionarObra(abc.ABC):
     def extraer_datos(cls, dataframe = None) -> object:  
         try:
             if dataframe is None:
-                dataframe = ("tp_capas_martinez_rodriguez_silva\\dataset\\observatorio-de-obras-urbanas.csv")
+                dataframe = ("tp_capas_rodriguez_silva\\dataset\\observatorio-de-obras-urbanas.csv")
             
             data = pd.read_csv(dataframe, sep=";",  encoding='ISO-8859-1',  quotechar='"', skip_blank_lines=True)
             return data
@@ -88,11 +88,9 @@ class GestionarObra(abc.ABC):
         if data is False: return None
         
         try:
-            if nombreColumna in data.columns:
-               return data.dropna(subset=[nombreColumna])
-       
+            return data.dropna(subset=[nombreColumna])
         except Exception as e: 
-            print("Error, no se pudo ingresar limpiar los registros. ", e)
+            print("Error, no se pudo ingresar a limpiar los registros. ", e)
             return None
     
 
@@ -100,13 +98,14 @@ class GestionarObra(abc.ABC):
     
     #funciona
     @classmethod
-    def datos_unique(cls,data, nombreColumna:str) -> list:
+    def datos_unique(cls, data, nombreColumna:str) -> list:
         if data is False: return
         try:
-            return list(data[nombreColumna].unique())
+            data_clean = cls.limpiar_datos(data, nombreColumna)
+            return list(data_clean[nombreColumna].unique())
         
         except Exception as e:
-            print("Erros, no se pudo unificar el listado. ", e)
+            print("Error, no se pudo unificar el listado. ", e)
             return
     
     #funciona
@@ -125,14 +124,14 @@ class GestionarObra(abc.ABC):
     #TODO: trabajando acá     
     @classmethod
     def cargar_datos(cls, model:Model, *atributos) -> None:
-        try: 
-            model.bulk_create(*atributos)
+        try:
+         model.bulk_create(*atributos)
+       
         except DatabaseError as e:
             print("Error en database: ", e)
         except Exception as e: 
             print(e)
-        
-        
+            
     #TODO:
     @classmethod
     def nueva_obra(cls, *args) -> None: 
