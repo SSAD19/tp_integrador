@@ -14,9 +14,29 @@ def main():
   
 
   data = GestionarObra.extraer_datos()
+  columnas=['plazo_meses', 'imagen_1', 'imagen_2', 'imagen_3', 'imagen_4', 
+            'beneficiarios', 'compromiso', 'destacada', 'ba_elige', 'link_interno', 'estudio_ambiental_descarga',
+            'financiamiento', 'Unnamed: 36']
+  
+  data = GestionarObra.eliminar_columnas(data, columnas)
+
   GestionarObra.imprimir_data(data)
   
+  
+  '''
+  primero  generar las tablas que no están relacionadas a otras y ver si son uniques 
+  limpiar area responsable
 
+  '''
+  #Por probar!!!!! 
+  area_data = GestionarObra.limpiar_datos( data, 'area_responsable')
+  listaLimpia = GestionarObra.datos_unique(area_data, "area_responsable")
+  
+  for i in listaLimpia:
+    
+    area = AreaResponsableDao()
+    area.crearModelo(i)
+    
  
   GestionarObra.cerrarConex()
   input("presione enter para culminar")

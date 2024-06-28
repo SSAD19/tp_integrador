@@ -8,7 +8,7 @@ class BaseModel(Model):
         database = db_obras.db_sqlite
 
 class AreaResponsable(BaseModel):
-    id_area = AutoField(primary_key= True)
+    id_pk = AutoField(primary_key= True)
     nombre_area = CharField(unique = True, max_length=100)
     
     class Meta:
@@ -16,7 +16,7 @@ class AreaResponsable(BaseModel):
     
 class TipoObra(BaseModel):
    
-    id_tipo_obra = AutoField(primary_key=True)
+    id_pk = AutoField(primary_key=True)
     nombre = CharField()
     
     
@@ -25,7 +25,7 @@ class TipoObra(BaseModel):
 
 
 class TipoContratacion(BaseModel):
-    id_tipo_contratacion= AutoField(primary_key=True)
+    id_pk= AutoField(primary_key=True)
     nombre_tipo = CharField(unique = True)
     
     class Meta:
@@ -33,7 +33,7 @@ class TipoContratacion(BaseModel):
 
 
 class Predio(BaseModel):
-    id_predio = AutoField()
+    id_pk = AutoField()
     comuna = CharField(unique = True)
     barrio = CharField(unique = True)
     
@@ -41,7 +41,7 @@ class Predio(BaseModel):
         db_table = 'predios'
 
 class Empresa (BaseModel):
-    id_empresa = AutoField(primary_key=True)
+    id_pk = AutoField(primary_key=True)
     razon_social = CharField(unique=True)
     cuit = IntegerField(unique=True)
     activa = BooleanField(default=True) 
@@ -50,7 +50,7 @@ class Empresa (BaseModel):
         db_table = 'empresas'
         
 class Contratacion(BaseModel): 
-    id_contratacion = AutoField(primary_key=True)
+    id_pk = AutoField(primary_key=True)
     nro_contratacion = CharField(unique=True)
     tipo_contratacion = ForeignKeyField(TipoContratacion) 
     empresa = ForeignKeyField(Empresa)    
@@ -60,7 +60,7 @@ class Contratacion(BaseModel):
         db_table = 'contrataciones'
 
 class Licitacion(BaseModel):
-    id_licitacion = AutoField(primary_key = True)
+    id_pk = AutoField(primary_key = True)
     licitacion_anio = DateField()
     descripcion = TextField()
     area_responsable = ForeignKeyField(AreaResponsable)
@@ -73,7 +73,7 @@ class Licitacion(BaseModel):
         db_table= 'licitaciones'    
         
 class EtapaObra(BaseModel):
-    id_etapa_obra = AutoField(primary_key=True)
+    id_pk = AutoField(primary_key=True)
     nombre = CharField(unique = True, max_length=100)
     estado = BooleanField(default=True)
 
@@ -86,9 +86,9 @@ class EtapaObra(BaseModel):
 
 class Obra(BaseModel):
     
-    id_obra = AutoField(primary_key=True)
-    entorno = CharField(unique = True)
-    nombre = CharField(unique = True)
+    id_pk = AutoField(primary_key=True)
+    entorno = CharField()
+    nombre = CharField()
     tipo_obra = ForeignKeyField(TipoObra)
     etapa_obra =ForeignKeyField(EtapaObra)
     licitacion = ForeignKeyField(Licitacion)
@@ -117,6 +117,8 @@ class Obra(BaseModel):
     
     def iniciar_obra(self):
         #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
+        self.fecha_inicio = TimestampField()
+        
         pass
     
     def actualizar_porcentaje_avance(self):

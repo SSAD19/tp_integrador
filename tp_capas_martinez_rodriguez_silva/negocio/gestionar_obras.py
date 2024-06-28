@@ -7,7 +7,10 @@ from models.modelo_orm import *
 class GestionarObra(abc.ABC):
     
     db = db_sqlite
+    
+    #Funciona
     #Lógica de negocio asociada a la base de datos 
+    #funcion para conectar la base de datos, en caso de cambiar la misma se realizará en utils. 
     @classmethod
     def conectar_db(cls) -> bool:
         try:
@@ -18,6 +21,8 @@ class GestionarObra(abc.ABC):
             print("Error!! ", e)
             return False
     
+    #funciona 
+    #Función para mapear las estructura de la base de datos
     @classmethod
     def mapear_orm(cls, *tablas:BaseModel) -> None: 
         try:
@@ -27,6 +32,9 @@ class GestionarObra(abc.ABC):
             print("Error al crear la tabla. ", e)
             
          #TODO: EXCEPCIONES PERSONALIZADAS
+   
+   #funciona
+   #Función para cerrar la conexión cuando no sea necesario  realizar acciones con esta
     @classmethod
     def cerrarConex(cls) -> None:
         try: 
@@ -35,7 +43,8 @@ class GestionarObra(abc.ABC):
                  print('cerro conexion')
         except Exception as e:
             print("Error al cerrar la conexión. ", e) 
-      
+    
+    #funciona  
     @classmethod        
     def verTablas(cls) -> None:
         try:
@@ -46,8 +55,10 @@ class GestionarObra(abc.ABC):
     
     
     #Logica de negocio relacionada a la manipulacion de grandes datos mediante pandas y numpy     
+    
+    #funciona
     @classmethod
-    def extraer_datos(cls, dataframe = None):  
+    def extraer_datos(cls, dataframe = None) -> object:  
         try:
             if dataframe is None:
                 dataframe = ("tp_capas_martinez_rodriguez_silva\\dataset\\observatorio-de-obras-urbanas.csv")
@@ -57,25 +68,36 @@ class GestionarObra(abc.ABC):
         
         except FileNotFoundError as e:
             print("Error al conectar con el dataset.", e)
-            return False
+            return None
         
         except Exception as e: 
             print("Error al importar dataset. ", e)
-            return False
-    
+            return None
     #TODO: EXCEPCIONES PERSONALIZADAS
+    
     @classmethod
-    def limpiar_datos (cls,data, nombreColumna:str):
-        if data is False: return
+    def eliminar_columnas(cls, data, columnas) -> object:
+        try:
+           return data.drop(columns=columnas)
+       
+        except Exception as e: 
+            print('Error', e)  
+            return None  
+            
+    #trabajando en esta funcion
+    #TODO: HAY ERROR  'NoneType' object is not subscriptable
+    @classmethod
+    def limpiar_datos (cls, data, nombreColumna:str):
+        if data is False: return None
         
         try:
-            return data.dropna(subset=[f'{nombreColumna}'], axis =0, inplace= True)
-        
+            data[nombreColumna] = data[nombreColumna].apply(lambda x: x.lower())
+            return  data.dropna(subset=[nombreColumna])
         except Exception as e: 
-            print("Erros, no se pudo ingresar limpiar los registros. ", e)
-            return 
+            print("Error, no se pudo ingresar limpiar los registros. ", e)
+            return None
     
-    
+
      #función para eliminar datos repetidos 
     @classmethod
     def datos_unique(cls,data, nombreColumna:str) -> list:
@@ -91,13 +113,13 @@ class GestionarObra(abc.ABC):
     def imprimir_data(cls, data) -> None:
         #en caso de haber algún error en la data retorna sin hacer nada
         if data is False: return
-        
+        try: 
         #Imprimir nombres para confirmar datos de columnas
-        print(data.columns)
-        #Imprimir cantidad total de datos (?)
-        print(data.count())
-        
-        #TODO: Chequear como se ven esos datos por consola 
+            print(data.columns)
+            #Imprimir cantidad total de datos por columna
+            #print(data.count())
+        except Exception as e:
+            print('Erro: ', e)
         
          
     #TODO:
@@ -126,7 +148,6 @@ class GestionarObra(abc.ABC):
     except Exception as e:
       print(f"Error al crear empresa {e}")
         
-        
         '''
         #hacerlo en el mosulo CargaDatos
         
@@ -141,4 +162,19 @@ class GestionarObra(abc.ABC):
     #TODO:
     @classmethod
     def obtener_indicadores(cls, *args) -> None: 
+        '''
+        query segun orm peewew para obtener la siguiente informacion :
+        a. Listado de todas las áreas responsables.
+        b. Listado de todos los tipos de obra.
+        c. Cantidad de obras que se encuentran en cada etapa.
+        d. Cantidad de obras y monto total de inversión por tipo de obra.
+        e. Listado de todos los barrios pertenecientes a las comunas 1, 2 y 3.
+        f. Cantidad de obras finalizadas y su y monto total de inversión en la comuna 1.
+        g. Cantidad de obras finalizadas en un plazo menor o igual a 24 meses.
+
+        h. Porcentaje total de obras finalizadas.
+        i. Cantidad total de mano de obra empleada.
+        j. Monto total de inversión.
+        
+        '''
         pass 

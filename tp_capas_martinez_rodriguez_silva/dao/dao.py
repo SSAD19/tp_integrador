@@ -15,7 +15,7 @@ class BaseDao:
         
     def borrarModelo(self, id):
         try: 
-            query = self.model.delete().where(self.model.id == id)
+            query = self.model.delete().where(self.model.id_pk == id)
             query.execute()
         except Exception as e: 
             print(e)
@@ -27,10 +27,10 @@ class BaseDao:
             print(e) 
             
     #TODO:  Probar , en caso de no funcionar se modificara por cada entidad en DAO
-    def traerUno (self, **kwargs):
-        return self.model.get(**kwargs)
+    def traerUno (self, *kwargs):
+        return self.model.get().where(kwargs)
     
-    def actualizarModelo (self, **kwargs):
+    def actualizarModelo (self, *kwargs):
         query = self.model.update().where(kwargs)
         query.execute()
     
@@ -75,3 +75,8 @@ class TipoContratacionDao(BaseDao):
 class TipoObraDao(BaseDao):
     def __init__(self):
         super().__init__(TipoObra)
+        
+        
+class ObraDao(BaseDao):
+    def __init__(self):
+        super().__init__(Obra)
