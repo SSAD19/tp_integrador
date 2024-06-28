@@ -26,7 +26,7 @@ class TipoObra(BaseModel):
 
 class TipoContratacion(BaseModel):
     id_pk= AutoField(primary_key=True)
-    nombre_tipo = CharField(unique = True)
+    nombre= CharField(unique = True)
     
     class Meta:
         db_table = 'tipo_contratacion'
@@ -74,9 +74,8 @@ class Licitacion(BaseModel):
         
 class EtapaObra(BaseModel):
     id_pk = AutoField(primary_key=True)
-    nombre = CharField(unique = True, max_length=100)
-    estado = BooleanField(default=True)
-
+    nombre= CharField(unique = True, max_length=100)
+    
     class Meta:
         db_table= 'etapas_obra'
 

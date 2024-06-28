@@ -1,6 +1,5 @@
 import abc
 import pandas as pd
-from dao.dao import BaseDao
 from utils.db_obras import *
 from models.modelo_orm import *
 
@@ -53,9 +52,7 @@ class GestionarObra(abc.ABC):
             print("Error al ver las tablas. ", e)
     
     
-    
     #Logica de negocio relacionada a la manipulacion de grandes datos mediante pandas y numpy     
-    
     #funciona
     @classmethod
     def extraer_datos(cls, dataframe = None) -> object:  
@@ -75,7 +72,6 @@ class GestionarObra(abc.ABC):
             return None
     #TODO: EXCEPCIONES PERSONALIZADAS
     
-    
     @classmethod
     def eliminar_columnas(cls, data, columnas) -> object:
         try:
@@ -86,20 +82,23 @@ class GestionarObra(abc.ABC):
             return None  
             
     #trabajando en esta funcion
-    #TODO: HAY ERROR  'NoneType' object is not subscriptable
+    #TODO: HAY ERROR , pareceria no estar eliminando espacios en blanco (?)
     @classmethod
     def limpiar_datos (cls, data, nombreColumna:str):
         if data is False: return None
         
         try:
-            data[nombreColumna] = data[nombreColumna].apply(lambda x: x.lower())
-            return  data.dropna(subset=[nombreColumna])
+            if nombreColumna in data.columns:
+               return data.dropna(subset=[nombreColumna])
+       
         except Exception as e: 
             print("Error, no se pudo ingresar limpiar los registros. ", e)
             return None
     
 
      #función para eliminar datos repetidos 
+    
+    #funciona
     @classmethod
     def datos_unique(cls,data, nombreColumna:str) -> list:
         if data is False: return
@@ -110,6 +109,7 @@ class GestionarObra(abc.ABC):
             print("Erros, no se pudo unificar el listado. ", e)
             return
     
+    #funciona
     @classmethod    
     def imprimir_data(cls, data) -> None:
         #en caso de haber algún error en la data retorna sin hacer nada
@@ -122,7 +122,7 @@ class GestionarObra(abc.ABC):
         except Exception as e:
             print('Erro: ', e)
         
-         
+    #TODO: trabajando acá     
     @classmethod
     def cargar_datos(cls, model:Model, *atributos) -> None:
         try: 
@@ -133,9 +133,6 @@ class GestionarObra(abc.ABC):
             print(e)
         
         
-        
-        
-    
     #TODO:
     @classmethod
     def nueva_obra(cls, *args) -> None: 
