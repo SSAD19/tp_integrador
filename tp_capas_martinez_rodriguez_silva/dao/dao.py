@@ -2,36 +2,36 @@ from peewee import *
 from models.modelo_orm import *
 
 class BaseDao:
-    def __init__(self, model):
+    def __init__(self, model:Model):
         self.model = model
    
      #TODO: Métodos CRUD con models
      
-    def crearModelo(self, **kwargs):
+    def crear_modelo(self, **kwargs):
         try:
             self.model.create(**kwargs)
         except Exception as e: 
             print(e)
         
-    def borrarModelo(self, id):
+    def borrar_modelo(self, id:int):
         try: 
             query = self.model.delete().where(self.model.id_pk == id)
             query.execute()
         except Exception as e: 
             print(e)
         
-    def traerTodos (self):
+    def traer_todos (self):
         try: 
             return list(self.model.select())
         except Exception as e:
             print(e) 
             
     #TODO:  Probar , en caso de no funcionar se modificara por cada entidad en DAO
-    def traerUno (self, *kwargs):
-        return self.model.get().where(kwargs)
+    def traer_uno (self,id):
+        return self.model.get().where(self.model.id_pk ==id)
     
-    def actualizarModelo (self, *kwargs):
-        query = self.model.update().where(kwargs)
+    def actualizarModelo (self, id:int, *kwargs):
+        query = self.model.update(*kwargs).where(self.model.id_pk == id)
         query.execute()
     
 
@@ -40,16 +40,25 @@ class AreaResponsableDao(BaseDao):
     def __init__(self):
         super().__init__(AreaResponsable)
         
+    def traer_por_nombre (self, nombre):
+        return self.model.select().where(self.model.nombre_area == nombre)
+        
         
 class ContrataciondesDao(BaseDao):
     def __init__(self):
         super().__init__(Contratacion)
+        
+    '''
+        query = Stat.update(counter=Stat.counter + 1).where(Stat.url == request.url)
+        query.execute()
+    
+    '''
 
 class EmpresaDao(BaseDao):
     def __init__(self):
         super().__init__(Empresa)
         
-class EtapaOnraDao(BaseDao):
+class EtapaObraDao(BaseDao):
     def __init__(self):
         super().__init__(EtapaObra)
 
@@ -80,3 +89,4 @@ class TipoObraDao(BaseDao):
 class ObraDao(BaseDao):
     def __init__(self):
         super().__init__(Obra)
+     

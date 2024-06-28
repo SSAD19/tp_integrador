@@ -1,6 +1,6 @@
 import abc
-import os
 import pandas as pd
+from dao.dao import BaseDao
 from utils.db_obras import *
 from models.modelo_orm import *
 
@@ -75,6 +75,7 @@ class GestionarObra(abc.ABC):
             return None
     #TODO: EXCEPCIONES PERSONALIZADAS
     
+    
     @classmethod
     def eliminar_columnas(cls, data, columnas) -> object:
         try:
@@ -103,7 +104,7 @@ class GestionarObra(abc.ABC):
     def datos_unique(cls,data, nombreColumna:str) -> list:
         if data is False: return
         try:
-            return list(data[f'{nombreColumna}'].unique())
+            return list(data[nombreColumna].unique())
         
         except Exception as e:
             print("Erros, no se pudo unificar el listado. ", e)
@@ -122,37 +123,18 @@ class GestionarObra(abc.ABC):
             print('Erro: ', e)
         
          
-    #TODO:
     @classmethod
-    def cargar_datos(cls, *args) -> None:
-        #TODO: sentencias necesarias para pasar persistir data del dataframe en DB
-        '''
-          #cargar Empresas 
-  datos_obras_urbanas = eliminar_vacios(datos_obras_urbanas, 'licitacion_oferta_empresa')
-  Empresas = datos_unique(datos_obras_urbanas, 'licitacion_oferta_empresa')
-  
-  for i in Empresas: 
-
-    try: 
-      if datos_obras_urbanas['licitacion_oferta_empresa'].str.contains(i):
-        cuit = datos_obras_urbanas['cuit_contratista']
-      else:
-        cuit = None
-        
-      EmpresaD.create(licitacion_oferta_empresa = i,
-                     cuit_contratista =cuit)
-      
-    except DatabaseError as e: 
-      print(f"Error al crear empresa {e}")
-      
-    except Exception as e:
-      print(f"Error al crear empresa {e}")
-        
-        '''
-        #hacerlo en el mosulo CargaDatos
+    def cargar_datos(cls, model:Model, *atributos) -> None:
+        try: 
+            model.bulk_create(*atributos)
+        except DatabaseError as e:
+            print("Error en database: ", e)
+        except Exception as e: 
+            print(e)
         
         
-        pass
+        
+        
     
     #TODO:
     @classmethod
