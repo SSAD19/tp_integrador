@@ -23,14 +23,12 @@ class TipoObra(BaseModel):
     class Meta:
         db_table = 'tipos_obra'
 
-
 class TipoContratacion(BaseModel):
     id= AutoField(primary_key=True)
     nombre= CharField(unique = True)
     
     class Meta:
         db_table = 'tipo_contratacion'
-
 
 class Predio(BaseModel):
     id = AutoField()
@@ -47,10 +45,11 @@ class EtapaObra(BaseModel):
         db_table= 'etapas_obra'     
         
 
+#Modelos con màs de un campo
 class Empresa (BaseModel):
     id = AutoField(primary_key=True)
     razon_social = CharField(unique=True)
-    cuit = IntegerField(unique=True)
+    cuit = CharField(unique=True)
     activa = BooleanField(default=True) 
     
     class Meta:
