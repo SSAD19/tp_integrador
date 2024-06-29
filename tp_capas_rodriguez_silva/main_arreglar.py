@@ -50,7 +50,7 @@ def main_revisando():
 
   #TODO: DESBLOQUEAR
   #Función que me crea cada campo, TODO: Hacer una sola que solo meta varios campos
-  cargando_dataframe_un_campo(data)
+  #cargando_dataframe_un_campo(data)
   
   
   #TODO: IMPORTACION DE EMPRESAS Y  TABLAS MÁS COMPLEJAS

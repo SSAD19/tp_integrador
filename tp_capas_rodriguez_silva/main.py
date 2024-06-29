@@ -29,44 +29,26 @@ def main():
             'beneficiarios', 'compromiso', 'destacada', 'ba_elige', 'link_interno', 'estudio_ambiental_descarga',
             'financiamiento', 'Unnamed: 36', 'comuna']  
     data = GestionarObra.eliminar_columnas(data, columnas)
+    GestionarObra.imprimir_data(data)
       
-    cargando_dataframe_un_campo(data, 'area_responsable','nombre_area', AreaResponsable)
-    cargando_dataframe_un_campo(data, 'tipo', 'nombre', TipoObra)
-    cargando_dataframe_un_campo(data, 'contratacion_tipo', 'nombre', TipoContratacion)
-    cargando_dataframe_un_campo(data, 'etapa', 'nombre', EtapaObra)
-    cargando_dataframe_un_campo(data, 'barrio', 'barrio', Predio)
+#     cargando_dataframe_un_campo(data, 'area_responsable','nombre_area', AreaResponsable)
+#     cargando_dataframe_un_campo(data, 'tipo', 'nombre', TipoObra)
+#     cargando_dataframe_un_campo(data, 'contratacion_tipo', 'nombre', TipoContratacion)
+#     cargando_dataframe_un_campo(data, 'etapa', 'nombre', EtapaObra)
+#     cargando_dataframe_un_campo(data, 'barrio', 'barrio', Predio)
+   
+#    #cargando dato principal de empresa 
+#    #TODO: NO CARGÓ!!!!
+#     cargando_dataframe_un_campo(data, 'licitacion_oferta_empresa', 'razon_social', Empresa)
+    
+    #cragar por un for los cuit del dataframe que coincidan con la lista de empresas 
+   
+    #cargando dato principal de empresa 
+
    
    
+
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
-   
-   
-    '''
-    cargando_dataframe_un_campo()
-    cargando_dataframe_un_campo()
-    cargando_dataframe_un_campo()    
-    cargando_dataframe_un_campo()        
-        
-        
-    listado_clean = [AreaResponsable(campo=item) for item in listado]
-    GestionarObra.cargar_datos(AreaResponsable, listado_clean)
-    
-    listado = GestionarObra.datos_unique(dataframe, 'tipo')
-    listado_clean = [TipoObra(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(TipoObra, listado_clean)
-    
-    listado = GestionarObra.datos_unique(dataframe, 'contratacion_tipo')
-    listado_clean = [TipoContratacion(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(TipoContratacion, listado_clean)
-    
-    listado = GestionarObra.datos_unique(dataframe, 'etapa')
-    listado_clean = [EtapaObra(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(EtapaObra, listado_clean)
-    
-    listado = GestionarObra.datos_unique(dataframe, 'barrio')
-    listado_clean = [Predio(nombre= item) for item in listado]
-    GestionarObra.cargar_datos(Predio, listado_clean)
-  '''
-  
   
 main()
