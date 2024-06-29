@@ -111,13 +111,13 @@ def main_revisando():
   
 
   
-if __name__ == '__main__':
-  try:
-    main() 
+# if __name__ == '__main__':
+#   try:
+#     main() 
   
-  except ModuleNotFoundError as e:
-    print("Falló la importación de módulos, comuníquese con el desarrollador") 
+#   except ModuleNotFoundError as e:
+#     print("Falló la importación de módulos, comuníquese con el desarrollador") 
   
-  except Exception as e:
-    print("Error:", e)
+#   except Exception as e:
+#     print("Error:", e)
    

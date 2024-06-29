@@ -3,6 +3,7 @@ import peewee as pw
 import pandas as pd
 from utils.db_obras import *
 from models.modelo_orm import *
+import asyncio
 
 class GestionarObra(abc.ABC):
     
@@ -135,7 +136,7 @@ class GestionarObra(abc.ABC):
         
     #TODO: unificar aca haciendo primerlo la limpieza de datos   
     @classmethod
-    def cargar_datos(cls, model:Model, atributos) -> None:
+    async def cargar_datos(cls, model:Model, atributos) -> None:
         try:
         # model.bulk_create(*atributos)
          #TODO: cambiar a model.create(*atributos)

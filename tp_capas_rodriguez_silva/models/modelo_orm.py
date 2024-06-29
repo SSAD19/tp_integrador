@@ -39,7 +39,7 @@ class Predio(BaseModel):
 
 class EtapaObra(BaseModel):
     id = AutoField(primary_key=True)
-    nombre= CharField(unique = True, max_length=100)
+    nombre = CharField(unique = True, max_length=100)
     
     class Meta:
         db_table= 'etapas_obra'     
@@ -49,7 +49,7 @@ class EtapaObra(BaseModel):
 class Empresa (BaseModel):
     id = AutoField(primary_key=True)
     razon_social = CharField(unique=True)
-    cuit = CharField(null=True)
+    cuit = CharField(null= True, max_length=15)
     activa = BooleanField(default=True) 
     
     class Meta:
