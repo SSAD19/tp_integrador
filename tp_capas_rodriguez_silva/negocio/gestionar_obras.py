@@ -136,17 +136,52 @@ class GestionarObra(abc.ABC):
         
     #TODO: unificar aca haciendo primerlo la limpieza de datos   
     @classmethod
-    async def cargar_datos(cls, model:Model, atributos) -> None:
+    async def cargar_datos_subclase(cls, model:Model, atributos) -> None:
         try:
-        # model.bulk_create(*atributos)
-         #TODO: cambiar a model.create(*atributos)
+           
             model.create(**atributos)
             
         except DatabaseError as e:
             print("Error en database: ", e)
         except Exception as e: 
             print(e)
-            
+  
+    @classmethod
+    async def cargar_datos(cls, data:pd.DataFrame) -> None:
+        try: 
+           for _, row in data.iterrows():
+               Contratacion.create(nro_contratacion=row['nro_contratacion'],
+                                   tipo_contratacion=row['tipo'],
+                                   empresa=row['licitacion_oferta_empresa'],
+                                   mano_de_obra=row['mano_obra']
+                                   )
+               Licitacion.create(
+                   expediente=row['expediente-numero'],
+                   licitacion_anio=row['licitacion_anio'],
+                   descripcion=row['descripcion'],
+                   area_responsable=row['area_responsable']
+                   )
+               Obra.create(
+                   entorno=row['entorno'],
+                   nombre=row['nombre'],
+                   tipo_obra=row['tipo'],
+                   etapa_obra=row['etapa'],
+                   licitacion=row['expediente-numero'],
+                   contratacion=row['nro_contratacion'],
+                   predio=row['barrio'],
+                   direccion=row['direccion'],
+                   lat=row['lat'],
+                   long=row['lng'],
+                   fecha_inicio=row['fecha_inicio'],
+                   fecha_estimada_fin=row['fecha_fin_inicial']
+                   
+               )
+        except OperationalError as e:
+            print("No se han podido cargar los datos", e)
+                  
+        except Exception as e:
+            print("Error: ", e)
+                
     #TODO:desarrollar 
     @classmethod
     def nueva_obra(cls, *args) -> None: 

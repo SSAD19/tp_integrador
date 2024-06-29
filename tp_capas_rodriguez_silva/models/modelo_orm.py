@@ -57,7 +57,7 @@ class Empresa (BaseModel):
         
 class Contratacion(BaseModel): 
     id = AutoField(primary_key=True)
-    nro_contratacion = CharField(unique=True)
+    nro_contratacion = CharField()
     tipo_contratacion = ForeignKeyField(TipoContratacion) 
     empresa = ForeignKeyField(Empresa)    
     mano_de_obra = IntegerField()
@@ -67,6 +67,7 @@ class Contratacion(BaseModel):
 
 class Licitacion(BaseModel):
     id= AutoField(primary_key = True)
+    expediente= CharField()
     licitacion_anio = DateField()
     descripcion = TextField()
     area_responsable = ForeignKeyField(AreaResponsable)
@@ -81,7 +82,7 @@ class Licitacion(BaseModel):
 #TODO: clase obra - COMPLETAR SIGUIENDO ESQUEMA DE LAS CLASES YA HECHAS 
 class Obra(BaseModel):
     
-    id_pk = AutoField(primary_key=True)
+    id = AutoField(primary_key=True)
     entorno = CharField()
     nombre = CharField()
     tipo_obra = ForeignKeyField(TipoObra)
