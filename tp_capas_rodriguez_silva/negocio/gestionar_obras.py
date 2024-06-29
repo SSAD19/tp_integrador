@@ -103,7 +103,6 @@ class GestionarObra(abc.ABC):
             print("Error, no se pudo ingresar a limpiar los registros. ", e)
             return 
     
-
      #función para eliminar datos repetidos 
     
     #funciona
@@ -159,8 +158,10 @@ class GestionarObra(abc.ABC):
                    expediente=row['expediente-numero'],
                    licitacion_anio=row['licitacion_anio'],
                    descripcion=row['descripcion'],
-                   area_responsable=row['area_responsable']
+                   area_responsable=row['area_responsable'],
+                   pliego=row['pliego_descarga']
                    )
+               
                Obra.create(
                    entorno=row['entorno'],
                    nombre=row['nombre'],

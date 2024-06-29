@@ -4,6 +4,12 @@ from pandas import *
 import asyncio
 
 
+#funcion de limpieza más especifica de la data
+def limpiar_principales_data(dataframe, columns:list):
+      for i in columns:
+        dataframe = GestionarObra.limpiar_datos(dataframe, i)
+      return dataframe
+   
 #funciona perfecto, no tocar
 async def cargando_datos_de_un_campo(dataframe, nombreColumna:str, campo:str, model=BaseModel,):
   
@@ -45,26 +51,41 @@ async def main():
             'beneficiarios', 'compromiso', 'destacada', 'ba_elige', 'link_interno', 'estudio_ambiental_descarga',
             'financiamiento', 'Unnamed: 36', 'comuna']  
     data = GestionarObra.eliminar_columnas(data, columnas)
+    print(len(data))
+    
+    columnas_limpiar=[ 'nombre', 'nro_contratacion','expediente-numero']
+    data = limpiar_principales_data(data, columnas_limpiar)
+    
+    print(len(data))
     GestionarObra.imprimir_data(data)
      
-    # await cargando_datos_de_un_campo(data, 'area_responsable','nombre_area', AreaResponsable)
-    # print('Cargando datos')
-    # await cargando_datos_de_un_campo(data, 'tipo', 'nombre', TipoObra)
-    # print('Cargando datos')
-    # await cargando_datos_de_un_campo(data, 'contratacion_tipo', 'nombre', TipoContratacion)
-    # print('Cargando datos')
-    # await cargando_datos_de_un_campo(data, 'etapa', 'nombre', EtapaObra)
-    # print('Cargando datos')
-    # await cargando_datos_de_un_campo(data, 'barrio', 'barrio', Predio)
-    # print('Cargando datos')
+    await cargando_datos_de_un_campo(data, 'area_responsable','nombre_area', AreaResponsable)
+    print('Cargando datos')
+    await cargando_datos_de_un_campo(data, 'tipo', 'nombre', TipoObra)
+    print('Cargando datos')
+    await cargando_datos_de_un_campo(data, 'contratacion_tipo', 'nombre', TipoContratacion)
+    print('Cargando datos')
+    await cargando_datos_de_un_campo(data, 'etapa', 'nombre', EtapaObra)
+    print('Cargando datos')
+    await cargando_datos_de_un_campo(data, 'barrio', 'barrio', Predio)
+    print('Cargando datos')
     
 
-    # data_empresa = data[['licitacion_oferta_empresa', 'cuit_contratista']]
-    # await cargar_datos_empresa(data_empresa)
+    data_empresa = data[['licitacion_oferta_empresa', 'cuit_contratista']]
+    await cargar_datos_empresa(data_empresa)
     
     lista_empresas = Empresa.select().where(Empresa.id.between(1, 5))
     for empresa in lista_empresas:
         print(empresa, empresa.razon_social)
+    
+    print('continua la carga de datos, por favor, espere.') 
+    await GestionarObra.cargar_datos(data)
+    
+    print('data correctamente cargada.')
+    
+    
+    
+    
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
 

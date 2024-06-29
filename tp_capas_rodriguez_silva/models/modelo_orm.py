@@ -57,10 +57,10 @@ class Empresa (BaseModel):
         
 class Contratacion(BaseModel): 
     id = AutoField(primary_key=True)
-    nro_contratacion = CharField()
-    tipo_contratacion = ForeignKeyField(TipoContratacion) 
-    empresa = ForeignKeyField(Empresa)    
-    mano_de_obra = IntegerField()
+    nro_contratacion=CharField(null= True)
+    tipo_contratacion=ForeignKeyField(TipoContratacion, null= True) 
+    empresa=ForeignKeyField(Empresa, null= True)    
+    mano_de_obra=IntegerField(null=True)
     
     class Meta:
         db_table = 'contrataciones'
@@ -68,12 +68,11 @@ class Contratacion(BaseModel):
 class Licitacion(BaseModel):
     id= AutoField(primary_key = True)
     expediente= CharField()
-    licitacion_anio = DateField()
-    descripcion = TextField()
-    area_responsable = ForeignKeyField(AreaResponsable)
-    
+    licitacion_anio = DateField(null= True)
+    descripcion = TextField(null= True)
+    area_responsable = ForeignKeyField(AreaResponsable, null= True)
     #Este campo es la URL donde pueden descargar los pliegos que estarán en una base de dato externa -nube/servidor
-    pliegos= CharField()
+    pliegos= CharField(null= True)
     
     
     class Meta:
@@ -83,27 +82,34 @@ class Licitacion(BaseModel):
 class Obra(BaseModel):
     
     id = AutoField(primary_key=True)
-    entorno = CharField()
-    nombre = CharField()
-    tipo_obra = ForeignKeyField(TipoObra)
-    etapa_obra =ForeignKeyField(EtapaObra)
-    licitacion = ForeignKeyField(Licitacion)
-    contratacion = ForeignKeyField(Contratacion)
-    predio = ForeignKeyField(Predio)
-    direccion = CharField()
-    lat = FloatField()
-    long = FloatField()
-    fecha_inicio = DateField()
-    fecha_estimada_fin = DateField()
+    entorno = CharField(null= True)
+    nombre = CharField(null= True)
+    tipo_obra = ForeignKeyField(TipoObra,null= True)
+    etapa_obra =ForeignKeyField(EtapaObra,null= True)
+    licitacion = ForeignKeyField(Licitacion, null= True)
+    contratacion = ForeignKeyField(Contratacion, null= True)
+    predio = ForeignKeyField(Predio, null= True)
+    direccion = CharField(null= True)
+    lat = FloatField(null= True)
+    long = FloatField(null= True)
+    fecha_inicio = DateField(null= True)
+    fecha_estimada_fin = DateField(null= True)
     
     
     #TODO: FUNCIONES 
-    def nuevo_proyecto(self):
-        #CREAR UNA LICITACION
-        #CREAR OBRA SOLO ON ID, NOMBRE Y LICITACION CREADA
+    def nuevo_proyecto(self, **args):
+        #TODO:Probar
+        #creo la licitacion
+        Licitacion.create(args)
+        #recupero la licitacion recien creada para tener el id
+        Obra.create(
+            entorno =args['entorno'],
+            nombre= args['nombre'],            
+            Licitacion = Licitacion.select().where(Licitacion.expediente == args['expediente']),)
+      
         pass
     
-    def iniciar_contratacion(self):
+    def iniciar_contratacion(self, id:int):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
         pass
     
