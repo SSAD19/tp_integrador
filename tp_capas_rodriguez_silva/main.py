@@ -77,20 +77,18 @@ async def main():
     #Creo las tablas necesarias para mi DB desde mis modelos
     GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-    #Extraigo los datos del dataSet 
-   # await extraccion_Data()
+    #Extrae los datos del dataSet 
+    await extraccion_Data()
     print('data completamente cargada')
     
     GestionarObra.obtener_indicadores()
-    
-    
     
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
 
 
 
-
+ 
  
 if __name__ == '__main__':
   try:

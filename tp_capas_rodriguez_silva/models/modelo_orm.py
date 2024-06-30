@@ -103,6 +103,7 @@ class Obra(BaseModel):
     plazo_meses=DoubleField(null=True)
     
     
+    
     #TODO: FUNCIONES 
     def nuevo_proyecto(self, **args):
         #TODO:Probar
