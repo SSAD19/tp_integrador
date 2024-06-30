@@ -184,7 +184,7 @@ class GestionarObra(abc.ABC):
         except Exception as e:
             print("Error: ", e)
                 
-    #TODO:desarrollar 
+    #Funciona
     @classmethod
     def nueva_obra(cls) -> Obra: 
         try:
@@ -230,12 +230,13 @@ class GestionarObra(abc.ABC):
             comuna=int(input('Indique el número de la comuna donde se ejecutará la obra: '))
             direccion =  input('Indique la dirección donde se ejecutará la obra: ')
             plazo_meses=int(input('indique el numero de meses de contrato estimado: '))
+            etapa = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
             
             nueva_obra_data = {
                     'entorno': entorno,
                     'nombre': nombre,
                     'tipo_obra': tipo_obra,
-                    'etapa_obra': EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto").get(),
+                    'etapa_obra': etapa,
                     'licitacion': licitacion,
                     'predio': predio,
                     'comuna': comuna,
@@ -249,28 +250,42 @@ class GestionarObra(abc.ABC):
         
         except Exception as e:
             print("Error: ", e)
+   
+   
+   #TESTEO
     @classmethod 
     def nueva_obra_hardcodeada(cls) -> Obra: 
         try:
-            
-            nueva_obra_data = {
+            etapa = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
+           
+            area =  AreaResponsable.select().where(AreaResponsable.nombre_area=='Ministerio de Salud')
+            licitacion = Licitacion.create(
+                    expediente='Ex896482-98', 
+                    licitacion_anio=date.today().year,
+                    area_responsable=area,
+                    descripcion='Reparación rieles'
+                    )
+            tipo_obra = TipoObra.select().where(TipoObra.nombre=='Arquitectura')
+            predio_buscar= Predio.select().where(Predio.barrio=='Saavedra')
+           
+            obra_data = {
                     'entorno': 'Áreas del tren',
                     'nombre': 'Saavedra_vias123',
-                    'tipo_obra': 'Reparación rieles',
-                    'etapa_obra': EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto").get(),
-                    'licitacion': 'EX-912-85-7',
-                    'predio': 'Saavedra',
+                    'tipo_obra': tipo_obra ,
+                    'etapa_obra': etapa,
+                    'licitacion': licitacion,
+                    'predio': predio_buscar,
                     'comuna': 12,
                     'direccion': 'Calle plaza',
                     'plazo_meses': 8,
                     'porcentaje_avance': 0
                  }
             
-            obra_nueva = Obra.nuevo_proyecto(nueva_obra_data)
+            obra_nueva = Obra.nuevo_proyecto(obra_data)
             return obra_nueva
         
         except Exception as e:
-            print("Error: ", e)
+            print("Error en nueva_obra_hardcodeada: ", e)
        
       
       
