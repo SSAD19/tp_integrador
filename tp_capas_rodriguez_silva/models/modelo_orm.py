@@ -1,3 +1,4 @@
+from datetime import date
 from peewee import *
 from utils import db_obras
 
@@ -15,7 +16,6 @@ class AreaResponsable(BaseModel):
         db_table= 'areas_responsables'    
     
 class TipoObra(BaseModel):
-   
     id= AutoField(primary_key=True)
     nombre= CharField(unique = True)
     
@@ -43,7 +43,7 @@ class Predio(BaseModel):
 
 class EtapaObra(BaseModel):
     id = AutoField(primary_key=True)
-    nombre = CharField(unique = True, max_length=100)
+    nombre=CharField(unique=True)
     
     class Meta:
         db_table= 'etapas_obra'     
@@ -51,9 +51,8 @@ class EtapaObra(BaseModel):
 
 #Modelos con màs de un campo
 class Empresa (BaseModel):
-    id = AutoField(primary_key=True)
+    id=AutoField(primary_key=True)
     razon_social = CharField(unique=True)
-    cuit = CharField(null= True, max_length=15)
     activa = BooleanField(default=True) 
     
     class Meta:
@@ -71,8 +70,9 @@ class Contratacion(BaseModel):
         db_table = 'contrataciones'
 
 class Licitacion(BaseModel):
+    
     id= AutoField(primary_key = True)
-    expediente= CharField()
+    expediente = CharField()
     licitacion_anio = DateField(null= True)
     descripcion = TextField(null= True)
     area_responsable = ForeignKeyField(AreaResponsable, null= True)
@@ -101,56 +101,83 @@ class Obra(BaseModel):
     fecha_inicio = DateField(null= True)
     fecha_estimada_fin = DateField(null= True)
     plazo_meses=DoubleField(null=True)
+    porcentaje_avance=IntegerField(default=0)
     
     
     
-    #TODO: FUNCIONES 
-    def nuevo_proyecto(self, **args):
-        #TODO:Probar
-        #creo la licitacion
-        Licitacion.create(args)
-        #recupero la licitacion recien creada para tener el id
-        Obra.create(
-            entorno =args['entorno'],
-            nombre= args['nombre'],            
-            Licitacion = Licitacion.select().where(Licitacion.expediente == args['expediente']),)
-      
-        pass
+    #TODO: Revisar funciones 
+    @classmethod
+    def nuevo_proyecto(self, obra_data):
+        try:           
+           obra = Obra.create(**obra_data) 
+           return obra       
+        except Exception as e:
+            print(e)
     
-    def iniciar_contratacion(self, id:int):
+    def iniciar_contratacion(self, contratacion:Contratacion):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
-        pass
-    
-    def adjudicar_obra(self):
-        #CREAR O BUSCAR EMPRESA (?)
-        pass
-    
-    def iniciar_obra(self):
-        #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
-        self.fecha_inicio = TimestampField()
+        try:
+            self.contratacion=contratacion
+            self.save()
+            
+        except Exception as e:
+            print(e)
         
-        pass
     
-    def actualizar_porcentaje_avance(self):
-        #segun la etapa en la que esta (numero de etapas) modificar el porcentaje
-        pass
+    def adjudicar_obra(self, empresa:Empresa):
+        #CREAR O BUSCAR EMPRESA (?)
+        try:
+            self.contratacion.empresa=empresa
+            self.save()
+            
+        except Exception as e:
+            print(e)
     
-    def incrementar_plazo(self): 
-        #incremenar dias a la fecha estimada fin
-        pass
+    def iniciar_obra(self, ):
+        #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
+        try:
+            self.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
+            self.save()
+        except Exception as e:
+            print(e)
     
-    def incrementar_mano_obra(self, num):
+    def actualizar_porcentaje_avance(self, porcentaje:int):
+        try: 
+            self.porcentaje_avance = porcentaje
+            self.save()
+        except Exception as e:
+            print(e)
+            
+    def incrementar_plazo(self, meses:int): 
+        try: 
+            self.plazo_meses = self.plazo_meses + meses
+            self.save()
+        except Exception as e:
+            print(e)
+    
+    def incrementar_mano_obra(self, num:int):
         # sumar num a la mano de obra que esta en clase contratacion 
-        pass
+        try: 
+            self.contratacion.mano_de_obra = self.contratacion.mano_de_obra + num
+            self.save()
+        except Exception as e:
+            print(e)
     
     def finalizar_obra(self):
         #actualizar etapa de obra
-        pass
+        try:
+            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "Finalizado")
+            self.save()
+        except Exception as e:
+            print(e)
     
     def rescindir_obra(self):
-        #¿actualizar etapa obra?
-        pass
-    
+        try:
+            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "rescindido")
+            self.save()
+        except Exception as e:
+            print(e)
+            
     class Meta:
         db_table = 'obra'
     

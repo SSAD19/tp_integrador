@@ -186,8 +186,95 @@ class GestionarObra(abc.ABC):
                 
     #TODO:desarrollar 
     @classmethod
-    def nueva_obra(cls) -> None: 
-        pass 
+    def nueva_obra(cls) -> Obra: 
+        try:
+           
+            #solicito los campos necesarios para generar nuevo proyecto
+            expediente = input('indique el expediente de la licitación a crear: ')
+            anio= date.today().year
+            descripcion= input('Descripción de la licitacion: ')
+            
+            areas_Todas = AreaResponsable.select()
+            for a in areas_Todas:
+                print(a.nombre_area)
+                
+            area_responsable = (input('Indique  # el area responsable: '))    
+            area =  AreaResponsable.select().where(AreaResponsable.nombre_area==area_responsable).get()
+            
+            licitacion = Licitacion.create(
+                                        expediente=expediente, 
+                                        licitacion_anio=anio,
+                                        area_responsable=area,
+                                        descripcion=descripcion
+                                        )
+            
+            etapa_nueva = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
+            entorno= input('Indique entorno de la obra: ')
+            nombre = input('Indique nombre de la obra: ')
+            
+            tipo_Todas = TipoObra.select(TipoObra.nombre)
+            for a in tipo_Todas:
+                print(a.nombre)
+            tipo = input('Indique tipo de obra: ')
+            tipo_obra = TipoObra.select().where(TipoObra.nombre==tipo)
+            
+            tipo_obra = tipo_obra
+            
+            predio_Todas = Predio.select(Predio.barrio)
+            for a in predio_Todas:
+                print(a.barrio)
+                
+            predio= input('Indique el barrio donde se ejecutará la obra: ')
+            predio_buscar= Predio.select().where(Predio.barrio==predio)
+            predio = predio_buscar
+            comuna=int(input('Indique el número de la comuna donde se ejecutará la obra: '))
+            direccion =  input('Indique la dirección donde se ejecutará la obra: ')
+            plazo_meses=int(input('indique el numero de meses de contrato estimado: '))
+            
+            nueva_obra_data = {
+                    'entorno': entorno,
+                    'nombre': nombre,
+                    'tipo_obra': tipo_obra,
+                    'etapa_obra': EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto").get(),
+                    'licitacion': licitacion,
+                    'predio': predio,
+                    'comuna': comuna,
+                    'direccion': direccion,
+                    'plazo_meses': plazo_meses,
+                    'porcentaje_avance': 0
+                 }
+            
+            obra_nueva = Obra.nuevo_proyecto(nueva_obra_data)
+            return obra_nueva
+        
+        except Exception as e:
+            print("Error: ", e)
+    @classmethod 
+    def nueva_obra_hardcodeada(cls) -> Obra: 
+        try:
+            
+            nueva_obra_data = {
+                    'entorno': 'Áreas del tren',
+                    'nombre': 'Saavedra_vias123',
+                    'tipo_obra': 'Reparación rieles',
+                    'etapa_obra': EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto").get(),
+                    'licitacion': 'EX-912-85-7',
+                    'predio': 'Saavedra',
+                    'comuna': 12,
+                    'direccion': 'Calle plaza',
+                    'plazo_meses': 8,
+                    'porcentaje_avance': 0
+                 }
+            
+            obra_nueva = Obra.nuevo_proyecto(nueva_obra_data)
+            return obra_nueva
+        
+        except Exception as e:
+            print("Error: ", e)
+       
+      
+      
+      
     
     #TODO: desarrollar
     @classmethod

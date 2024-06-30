@@ -19,15 +19,6 @@ async def cargando_datos_de_un_campo(dataframe, nombreColumna:str, campo:str, mo
         reg = {campo: i}
         await GestionarObra.cargar_datos_subclase(model, reg)
 
-
-#Primera pàrte funciona, falta asignar cuit
-async def cargar_datos_empresa(data_empresa):
-
-      #carga de razones sociales unique: 
-      await cargando_datos_de_un_campo(data_empresa, 'licitacion_oferta_empresa', 'razon_social', Empresa)
-      
-      #TODO: lISTA DE CUITS DONDE LA COLUMNA DE MI DATAFRAME COINCIDE CON MI LISTADO DE EMPRESAS
-
 async def extraccion_Data(): 
     #pasamos el archivo csv a dataframe se paso por defecto, pero puede pasarse otro archivo
     data = GestionarObra.extraer_datos()
@@ -58,15 +49,29 @@ async def extraccion_Data():
     await cargando_datos_de_un_campo(data, 'barrio', 'barrio', Predio)
     print('Cargando datos')
     
-    #creamos una data adicional para pasar los dos campos que nos interesan
-    #finalidad es tener empresas sin repetir y poder caragr el cuit
+    
     data_empresa = data[['licitacion_oferta_empresa', 'cuit_contratista']]
-    await cargar_datos_empresa(data_empresa)
+    await cargando_datos_de_un_campo(data_empresa, 'licitacion_oferta_empresa', 'razon_social', Empresa)
         
-    print('continua la carga de datos, por favor, espere.') 
-    await GestionarObra.cargar_datos(data)
+    # print('continua la carga de datos, por favor, espere.') 
+    # await GestionarObra.cargar_datos(data)
 
-   
+
+def cargar_data_subtabla_importante():
+  EtapaObra.create(nombre='rescindido')
+  
+  EtapaObra.create(nombre='nuevo proyecto')
+  print('nuevas etapas obras creadas')
+
+#TODO:  PASAR TODO LO DE LAS ETAPAS
+def pasar_por_etapas(obra:Obra):
+  try:
+    #En la vida real se solicitarian mediante input, preferiblemente por formularios en una interfaz web, escritorio o app móvil
+    # Para propósitos de demostración, se crean datos ficticios o de ejemplo.
+ 
+    obra.iniciar_contratacion()
+  except Exception as e:  
+    print(e) 
 
 async def main(): 
   
@@ -77,11 +82,34 @@ async def main():
     #Creo las tablas necesarias para mi DB desde mis modelos
     GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-    #Extrae los datos del dataSet 
-    await extraccion_Data()
-    print('data completamente cargada')
+    # #Extrae los datos del dataSet 
+    # await extraccion_Data()
+    # print('data completamente cargada')
     
-    GestionarObra.obtener_indicadores()
+    # cargar_data_subtabla_importante()
+    
+    
+    obra_nueva= GestionarObra.nueva_obra() 
+      #Esta se creó con la finalidad de poder probar el sistema en consola
+    obra_hardcodeada= GestionarObra.nueva_obra_hardcodeada()
+    print('obras cargadas')
+      
+    contratacion_data ={
+      'nro_contratacion' : None,
+      'tipo_contratacion':None,
+    
+      }
+    
+    empresa = Empresa.create(razon_social='Cualquiera SA')
+    data_adjudicar_obra ={
+      'empresa': empresa,
+      'mano_de_obra':5,
+      'monto':150000
+    }
+    
+      
+   
+    
     
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
