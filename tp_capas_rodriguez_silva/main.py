@@ -26,39 +26,27 @@ async def cargar_datos_empresa(data_empresa):
       #carga de razones sociales unique: 
       await cargando_datos_de_un_campo(data_empresa, 'licitacion_oferta_empresa', 'razon_social', Empresa)
       
-      lista_empresas = Empresa()
-      lista_empresas = lista_empresas.select()
-      print(lista_empresas)
-      
       #TODO: lISTA DE CUITS DONDE LA COLUMNA DE MI DATAFRAME COINCIDE CON MI LISTADO DE EMPRESAS
-     
-    
-async def main(): 
-  
-    
-    #Primer bloque creamos nuestra base de datos, conexión 
-    GestionarObra.conectar_db()
-    
-    #Creo las tablas necesarias para mi DB desde mis modelos
-    GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
- 
-    #Extraigo los datos del dataSet .- t
-    # rae un path por defecto, pero puede ingresarse para reutilizacion en otros casos
+
+async def extraccion_Data(): 
+    #pasamos el archivo csv a dataframe se paso por defecto, pero puede pasarse otro archivo
     data = GestionarObra.extraer_datos()
     
-      #Iniciamos la limpieza de los datos migrados eliminando las columnas que no vamos a utilizar
-    columnas=['plazo_meses', 'imagen_1', 'imagen_2', 'imagen_3', 'imagen_4', 
+    #Iniciamos la limpieza de los datos migrados eliminando las columnas que no vamos a utilizar
+    columnas=['imagen_1', 'imagen_2', 'imagen_3', 'imagen_4', 
             'beneficiarios', 'compromiso', 'destacada', 'ba_elige', 'link_interno', 'estudio_ambiental_descarga',
-            'financiamiento', 'Unnamed: 36', 'comuna']  
+            'financiamiento', 'Unnamed: 36']  
+  
     data = GestionarObra.eliminar_columnas(data, columnas)
-    print(len(data))
     
+    #Eliminamos los registros exportados con fallas en los campos que consideramos son excluyentes
     columnas_limpiar=[ 'nombre', 'nro_contratacion','expediente-numero']
     data = limpiar_principales_data(data, columnas_limpiar)
-    
-    print(len(data))
+  
+    #verificamos que hayan quedado las columnas necesarias
     GestionarObra.imprimir_data(data)
      
+    #iniciamos con la carga de datos de las subtablas 
     await cargando_datos_de_un_campo(data, 'area_responsable','nombre_area', AreaResponsable)
     print('Cargando datos')
     await cargando_datos_de_un_campo(data, 'tipo', 'nombre', TipoObra)
@@ -70,19 +58,30 @@ async def main():
     await cargando_datos_de_un_campo(data, 'barrio', 'barrio', Predio)
     print('Cargando datos')
     
-
+    #creamos una data adicional para pasar los dos campos que nos interesan
+    #finalidad es tener empresas sin repetir y poder caragr el cuit
     data_empresa = data[['licitacion_oferta_empresa', 'cuit_contratista']]
     await cargar_datos_empresa(data_empresa)
-    
-    lista_empresas = Empresa.select().where(Empresa.id.between(1, 5))
-    for empresa in lista_empresas:
-        print(empresa, empresa.razon_social)
-    
+        
     print('continua la carga de datos, por favor, espere.') 
     await GestionarObra.cargar_datos(data)
+
+   
+
+async def main(): 
+  
     
-    print('data correctamente cargada.')
+    #Primer bloque creamos nuestra base de datos, conexión 
+    GestionarObra.conectar_db()
+        
+    #Creo las tablas necesarias para mi DB desde mis modelos
+    GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
+ 
+    #Extraigo los datos del dataSet 
+   # await extraccion_Data()
+    print('data completamente cargada')
     
+    GestionarObra.obtener_indicadores()
     
     
     

@@ -29,6 +29,10 @@ class TipoContratacion(BaseModel):
     
     class Meta:
         db_table = 'tipo_contratacion'
+        
+class Comuna(BaseModel):
+    id= AutoField(primary_key=True)
+    nombre= CharField(unique = True)
 
 class Predio(BaseModel):
     id = AutoField()
@@ -61,6 +65,7 @@ class Contratacion(BaseModel):
     tipo_contratacion=ForeignKeyField(TipoContratacion, null= True) 
     empresa=ForeignKeyField(Empresa, null= True)    
     mano_de_obra=IntegerField(null=True)
+    monto=FloatField(null=True)
     
     class Meta:
         db_table = 'contrataciones'
@@ -89,11 +94,13 @@ class Obra(BaseModel):
     licitacion = ForeignKeyField(Licitacion, null= True)
     contratacion = ForeignKeyField(Contratacion, null= True)
     predio = ForeignKeyField(Predio, null= True)
+    comuna = CharField(null=True)
     direccion = CharField(null= True)
     lat = FloatField(null= True)
     long = FloatField(null= True)
     fecha_inicio = DateField(null= True)
     fecha_estimada_fin = DateField(null= True)
+    plazo_meses=DoubleField(null=True)
     
     
     #TODO: FUNCIONES 

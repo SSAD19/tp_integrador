@@ -3,7 +3,7 @@ import peewee as pw
 import pandas as pd
 from utils.db_obras import *
 from models.modelo_orm import *
-import asyncio
+from datetime import date 
 
 class GestionarObra(abc.ABC):
     
@@ -150,33 +150,34 @@ class GestionarObra(abc.ABC):
         try: 
            for _, row in data.iterrows():
                Contratacion.create(nro_contratacion=row['nro_contratacion'],
-                                   tipo_contratacion=row['tipo'],
+                                   tipo_contratacion=TipoContratacion.select().where(TipoContratacion.nombre==row['tipo']),
                                    empresa=row['licitacion_oferta_empresa'],
-                                   mano_de_obra=row['mano_obra']
+                                   mano_de_obra=row['mano_obra'],
+                                   monto=row['monto_contrato']
                                    )
                Licitacion.create(
                    expediente=row['expediente-numero'],
                    licitacion_anio=row['licitacion_anio'],
                    descripcion=row['descripcion'],
-                   area_responsable=row['area_responsable'],
+                   area_responsable=AreaResponsable.select().where(AreaResponsable.nombre_area==row['area_responsable']),
                    pliego=row['pliego_descarga']
-                   )
-               
+                   )             
                Obra.create(
                    entorno=row['entorno'],
                    nombre=row['nombre'],
-                   tipo_obra=row['tipo'],
-                   etapa_obra=row['etapa'],
-                   licitacion=row['expediente-numero'],
-                   contratacion=row['nro_contratacion'],
-                   predio=row['barrio'],
+                   tipo_obra=TipoObra.select().where(TipoObra.nombre==row['tipo']),
+                   etapa_obra=EtapaObra.select().where(EtapaObra.nombre==row['etapa']),
+                   licitacion=Licitacion.select().where(Licitacion.expediente==row['expediente-numero']),
+                   contratacion=Contratacion.select().where(Contratacion.nro_contratacion==row['nro_contratacion']),
+                   predio=Predio.select().where(Predio.barrio==row['barrio']),
+                   comuna=row['comuna'],
                    direccion=row['direccion'],
                    lat=row['lat'],
                    long=row['lng'],
                    fecha_inicio=row['fecha_inicio'],
-                   fecha_estimada_fin=row['fecha_fin_inicial']
-                   
-               )
+                   fecha_estimada_fin=row['fecha_fin_inicial'] 
+                   plazo_meses=row['plazo_meses']                  
+                   )
         except OperationalError as e:
             print("No se han podido cargar los datos", e)
                   
@@ -185,25 +186,110 @@ class GestionarObra(abc.ABC):
                 
     #TODO:desarrollar 
     @classmethod
-    def nueva_obra(cls, *args) -> None: 
+    def nueva_obra(cls) -> None: 
         pass 
     
     #TODO: desarrollar
     @classmethod
-    def obtener_indicadores(cls, *args) -> None: 
-        '''
-        query segun orm peewew para obtener la siguiente informacion :
-        a. Listado de todas las áreas responsables.
-        b. Listado de todos los tipos de obra.
-        c. Cantidad de obras que se encuentran en cada etapa.
-        d. Cantidad de obras y monto total de inversión por tipo de obra.
-        e. Listado de todos los barrios pertenecientes a las comunas 1, 2 y 3.
-        f. Cantidad de obras finalizadas y su y monto total de inversión en la comuna 1.
-        g. Cantidad de obras finalizadas en un plazo menor o igual a 24 meses.
-
-        h. Porcentaje total de obras finalizadas.
-        i. Cantidad total de mano de obra empleada.
-        j. Monto total de inversión.
+    def obtener_indicadores(cls) -> None: 
         
-        '''
-        pass 
+        try:
+        # a. Listado de todas las áreas responsables.
+            listado_areas= AreaResponsable.select(AreaResponsable.nombre_area)
+            print('Áreas responsable:')
+            for i in listado_areas:
+                print(f'-{i.nombre_area}')
+        except Exception as e:
+            print("Error: ", e)
+            
+        try:    
+            # b. Listado de todos los tipos de obra.
+            listado_tipo_obras=TipoObra.select(TipoObra.nombre)
+            print('Tipos de obras: ')
+            for i in listado_tipo_obras:
+                print(f'-{i.nombre}')
+        except Exception as e:
+            print("Error: ", e)
+            
+        try:    
+            # c. Cantidad de obras que se encuentran en cada etapa.
+            obras_por_etapa = (Obra.select(Obra.etapa_obra.nombre, fn.COUNT(Obra.id).alias('cantidad_obras')).group_by(Obra.etapa_obra.nombre))
+
+            print('Cantidad de obras por etapa:')
+            for i in obras_por_etapa:
+                print(f'- {i.etapa_obra.nombre}: {i.cantidad_obras}')
+        except Exception as e:
+            print("Error: ", e)
+            
+            
+        try:    
+            # d. Cantidad de obras y monto total de inversión por tipo de obra.
+            obras_por_tipo = (Obra
+                .select(
+                    Obra.tipo_obra.nombre,
+                    fn.COUNT(Obra.id).alias('cantidad_obras'),
+                    fn.SUM(Contratacion.monto).alias('monto_total_inversion')
+                )
+                .join(Obra.contratacion)
+                .group_by(Obra.tipo_obra.nombre))
+
+            print('Cantidad de obras y monto total de inversión por tipo de obra:')
+            for obra in obras_por_tipo:
+                print(f'- {obra.tipo_obra.nombre}: {obra.cantidad_obras} obras - Monto total: ${obra.monto_total_inversion:.2f}')
+        except Exception as e:
+            print("Error: ", e)
+        
+        try:   
+        #TODO: e. Listado de todos los barrios pertenecientes a las comunas 1, 2 y 3.
+            barrios_comunas = Predio.select(Predio.barrio).distinct().join(Obra, on=Predio.id == Obra.predio_id).where(
+                    Obra.comuna.in_([1, 2, 3]))
+            print('Listado de barrios pertenecientes a las comunas 1, 2 y 3:')
+            for barrio in  barrios_comunas:
+                print(f'- {barrio.barrio}')
+                
+        except Exception as e:
+            print("Error: ", e)
+       
+        # TODO:  f. Cantidad de obras finalizadas y su y monto total de inversión en la comuna 1.
+       
+       
+        # g. Cantidad de obras finalizadas en un plazo menor o igual a 24 meses.
+        try:
+            obras_finalizadas_24_meses = Obra.select().where(
+                Obra.fecha_estimada_fin <= fn.datetime('now') - fn.interval(months=24),
+                Obra.fecha_estimada_fin.is_not_null()
+            ).count()
+
+            print(f"Cantidad de obras finalizadas en un plazo menor o igual a 24 meses: {obras_finalizadas_24_meses}")
+        except Exception as e:
+            print("Error: ", e)
+
+        # h. Porcentaje total de obras finalizadas.
+        try: 
+            total_obras = Obra.select().count()
+            obras_finalizadas = Obra.select().where(Obra.fecha_estimada_fin.is_not_null()).count()
+
+            porcentaje_finalizadas = (obras_finalizadas / total_obras) * 100
+
+            print(f"Porcentaje total de obras finalizadas: {porcentaje_finalizadas:.2f}%")
+        
+        except Exception as e:
+            print("Error: ", e)
+        
+        # i. Cantidad total de mano de obra empleada.
+        
+        try:
+            mano_obra_total = Obra.select(Obra.mano_de_obra).sum()
+            print(f"Cantidad total de mano de obra empleada: {mano_obra_total}")
+            
+        except Exception as e:
+            print("Error: ", e)
+        
+        
+        # j. Monto total de inversión.
+        try:
+            monto_inversion_total = Obra.select(Obra.monto).sum()
+            print(f"Monto total de inversión: {monto_inversion_total}")
+        except Exception as e:
+            print("Error: ", e)
+   
