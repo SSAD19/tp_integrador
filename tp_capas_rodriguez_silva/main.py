@@ -83,31 +83,36 @@ async def main():
     GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
     # #Extrae los datos del dataSet 
-    # await extraccion_Data()
-    # print('data completamente cargada')
+    await extraccion_Data()
+    print('data completamente cargada')
     
-    # cargar_data_subtabla_importante()
+    cargar_data_subtabla_importante()
     
     
-    obra_nueva= GestionarObra.nueva_obra() 
-      #Esta se creó con la finalidad de poder probar el sistema en consola
-    obra_hardcodeada= GestionarObra.nueva_obra_hardcodeada()
-    print('obras cargadas')
-      
-    contratacion_data ={
-      'nro_contratacion' : None,
-      'tipo_contratacion':None,
+    # obra_nueva= GestionarObra.nueva_obra() 
     
-      }
-    
-    empresa = Empresa.create(razon_social='Cualquiera SA')
-    data_adjudicar_obra ={
-      'empresa': empresa,
-      'mano_de_obra':5,
-      'monto':150000
-    }
+    # tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Obra Publica')  
+    # contratacion_data ={'nro_contratacion' : '1298/2024','tipo_contratacion':tipo,}
+    # obra_nueva.iniciar_contratacion(contratacion_data)
     
       
+    # empresa = Empresa.create(razon_social='Cualquiera SA')
+    # monto = 17865009.00
+    # obra_nueva.adjudicar_obra(empresa, monto)
+    
+    
+    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
+    
+    if obra_hardcodeada != None:
+      tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
+      contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
+      obra_hardcodeada.iniciar_contratacion(contratacion_data)
+      
+      empresa = Empresa.create(razon_social='another + SA')
+      monto = 985421859.00
+      obra_hardcodeada.adjudicar_obra(empresa, monto)
+    else: 
+      print('No se pudo crear la obra')
    
     
     

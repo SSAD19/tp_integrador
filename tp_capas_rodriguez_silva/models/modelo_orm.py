@@ -106,34 +106,37 @@ class Obra(BaseModel):
     
     
     #TODO: Revisar funciones 
-    @classmethod
     def nuevo_proyecto(self, obra_data):
         try:           
            obra = Obra.create(**obra_data) 
            return obra       
         except Exception as e:
-            print(e)
+            print('Error en nuevo_proyecto', e)
+            return None
     
-    def iniciar_contratacion(self, contratacion:Contratacion):
+    def iniciar_contratacion(self, data):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
         try:
+            contratacion = Contratacion.create(**data)
             self.contratacion=contratacion
-            self.save()
+            self.contratacion.save()
             
         except Exception as e:
             print(e)
         
     
-    def adjudicar_obra(self, empresa:Empresa):
+    def adjudicar_obra(self, empresa:Empresa, monto:float):
         #CREAR O BUSCAR EMPRESA (?)
         try:
             self.contratacion.empresa=empresa
-            self.save()
+            self.contratacion.monto=monto
+            self.contratacion.save()
+         
             
         except Exception as e:
             print(e)
     
-    def iniciar_obra(self, ):
+    def iniciar_obra(self):
         #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
         try:
             self.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
