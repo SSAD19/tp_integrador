@@ -107,34 +107,37 @@ async def main():
     GestionarObra.conectar_db()
         
     #Creo las tablas necesarias para mi DB desde mis modelos
-    GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
+    # GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-     #Extrae los datos del dataSet 
-    await extraccion_Data()
-    # print('data completamente cargada')
+    #  #Extrae los datos del dataSet 
+    # await extraccion_Data()
+    # # print('data completamente cargada')
     
-    cargar_data_subtabla_importante()
+    # cargar_data_subtabla_importante()
     
+    
+    GestionarObra.obtener_indicadores()
   
-    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
-    if obra_hardcodeada != None:    
-      pasar_por_etapas(obra_hardcodeada)
-    else: 
-      print('No se pudo crear la obra')
+  
+    # obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
+    # if obra_hardcodeada != None:    
+    #   pasar_por_etapas(obra_hardcodeada)
+    # else: 
+    #   print('No se pudo crear la obra')
      
       
-    obra_nueva= GestionarObra.nueva_obra() 
-    if obra_nueva != None:    
-      pasar_por_etapas(obra_nueva)
-    else: 
-      print('No se pudo crear la obra')
+    # obra_nueva= GestionarObra.nueva_obra() 
+    # if obra_nueva != None:    
+    #   pasar_por_etapas(obra_nueva)
+    # else: 
+    #   print('No se pudo crear la obra')
       
-    try:
-      Obra.rescindir_obra(1)
+    # try:
+    #   Obra.rescindir_obra(1)
       
-    except Exception as e:
+    # except Exception as e:
       
-      print(e)
+    #   print(e)
   
     
     
