@@ -53,23 +53,66 @@ async def extraccion_Data():
     data_empresa = data[['licitacion_oferta_empresa', 'cuit_contratista']]
     await cargando_datos_de_un_campo(data_empresa, 'licitacion_oferta_empresa', 'razon_social', Empresa)
         
-    # print('continua la carga de datos, por favor, espere.') 
-    # await GestionarObra.cargar_datos(data)
+    print('continua la carga de datos, por favor, espere.') 
+    await GestionarObra.cargar_datos(data)
 
 
 def cargar_data_subtabla_importante():
-  EtapaObra.create(nombre='rescindido')
-  
-  EtapaObra.create(nombre='nuevo proyecto')
-  print('nuevas etapas obras creadas')
+  try:
+    EtapaObra.create(nombre='rescindido')
+    EtapaObra.create(nombre='nuevo proyecto')
+    print('nuevas etapas obras creadas')
+ 
+  except IntegrityError as e:
+        print(f"Error de integridad: No se pudieron crear las etapas de obra. Es posible que ya existan etapas con los mismos nombres.")
+ 
+  except Exception as e: 
+    print('yNo fue posible crear las subetapas')
 
-#TODO:  PASAR TODO LO DE LAS ETAPAS
+
 def pasar_por_etapas(obra:Obra):
   try:
-    #En la vida real se solicitarian mediante input, preferiblemente por formularios en una interfaz web, escritorio o app móvil
-    # Para propósitos de demostración, se crean datos ficticios o de ejemplo.
- 
-    obra.iniciar_contratacion()
+      tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
+      contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
+      obra.iniciar_contratacion(contratacion_data, obra.id)
+      
+      
+      empresa = Empresa.get_or_create(razon_social='another + SA')[0]
+      monto = 985421859.00
+      obra.adjudicar_obra(obra.id, empresa, monto)
+      
+      Obra.iniciar_obra(obra.id)
+      
+    
+      porcentaje = 30
+      Obra.actualizar_porcentaje_avance(obra.id, porcentaje) 
+    
+            
+      while True:
+          porcentaje = input('Ingrese el valor en forma de integer del porcentaje (0-100): ')
+          if porcentaje.isdigit() and 0 <= int(porcentaje) <= 100:
+              Obra.actualizar_porcentaje_avance(obra.id, int(porcentaje))
+              break
+          else:
+              print("El calor introducido no es válido. Por favor introduzca un valor entre 0 y 100")
+    
+      Obra.incrementar_plazo(obra.id, 4)
+      
+      Obra.incrementar_mano_obra(obra.id, 12)
+      
+      Obra.finalizar_obra(obra.id)
+      
+  except DoesNotExist as e:
+      if isinstance(e.model, TipoContratacion):
+          print(f"Error: No se encontró el tipo de contratación 'Contratacion Menor'.")
+      elif isinstance(e.model, Empresa):
+          print(f"Error: No se encontró la empresa 'another + SA'.")
+      else:
+          print(f"Error: No se encontró el registro necesario: {e}")
+
+  except ValueError as e:
+        print(f"Error de valor: {e}")
+        
   except Exception as e:  
     print(e) 
 
@@ -82,44 +125,32 @@ async def main():
     #Creo las tablas necesarias para mi DB desde mis modelos
     GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-    # #Extrae los datos del dataSet 
+     #Extrae los datos del dataSet 
     await extraccion_Data()
-    print('data completamente cargada')
+    # print('data completamente cargada')
     
     cargar_data_subtabla_importante()
     
-    
-    # obra_nueva= GestionarObra.nueva_obra() 
-    
-    # tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Obra Publica')  
-    # contratacion_data ={'nro_contratacion' : '1298/2024','tipo_contratacion':tipo,}
-    # obra_nueva.iniciar_contratacion(contratacion_data)
-    
-      
-    # empresa = Empresa.create(razon_social='Cualquiera SA')
-    # monto = 17865009.00
-    # obra_nueva.adjudicar_obra(empresa, monto)
-    
-    
-    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
-    
-    if obra_hardcodeada != None:
-      tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
-      contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
-      obra_hardcodeada.iniciar_contratacion(contratacion_data)
-      
-      empresa = Empresa.create(razon_social='another + SA')
-      monto = 985421859.00
-      obra_hardcodeada.adjudicar_obra(empresa, monto)
+  
+  
+    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
+    if obra_hardcodeada != None:    
+      pasar_por_etapas(obra_hardcodeada)
     else: 
       print('No se pudo crear la obra')
+     
+          
+    try:
+      Obra.rescindir_obra(1)
+      
+    except Exception as e:
+      print(e)
    
+    GestionarObra.obtener_indicadores()
     
     
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
-
-
 
  
  
@@ -128,7 +159,7 @@ if __name__ == '__main__':
     asyncio.run(main()) 
   
   except ModuleNotFoundError as e:
-    print("Falló la importación de módulos, comuníquese con el desarrollador") 
+    print("Falló la importación de módulos, comuníquese con el desarrollador")
   
   except Exception as e:
     print("Error:", e)

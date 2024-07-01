@@ -105,80 +105,109 @@ class Obra(BaseModel):
     
     
     
-    #TODO: Revisar funciones 
-    def nuevo_proyecto(self, obra_data):
-        try:           
-           obra = Obra.create(**obra_data) 
-           return obra       
+   #Funciona
+    @staticmethod
+    def nuevo_proyecto(obra_data:dict):
+        try:      
+            nueva_obra = Obra.create(**obra_data) 
+            return nueva_obra       
         except Exception as e:
             print('Error en nuevo_proyecto', e)
             return None
     
-    def iniciar_contratacion(self, data):
+    #Funciona
+    @staticmethod
+    def iniciar_contratacion(data, id):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
-        try:
+          try:
             contratacion = Contratacion.create(**data)
-            self.contratacion=contratacion
-            self.contratacion.save()
-            
-        except Exception as e:
+            obra = Obra.get(Obra.id == id)
+            obra.contratacion = contratacion
+            obra.save()
+          except Exception as e:
             print(e)
-        
     
-    def adjudicar_obra(self, empresa:Empresa, monto:float):
+    #Funciona
+    @staticmethod
+    def adjudicar_obra(id, empresa:Empresa, monto:float):
         #CREAR O BUSCAR EMPRESA (?)
         try:
-            self.contratacion.empresa=empresa
-            self.contratacion.monto=monto
-            self.contratacion.save()
-         
+            obra = Obra.get(Obra.id == id)
+            obra.contratacion.empresa = empresa
+            obra.contratacion.monto = monto
+            obra.contratacion.save()
             
         except Exception as e:
             print(e)
     
-    def iniciar_obra(self):
+    #Funciona
+    @staticmethod
+    def iniciar_obra(id):
         #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
         try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
-            self.save()
+            obra = Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
+            obra.save()
         except Exception as e:
             print(e)
     
-    def actualizar_porcentaje_avance(self, porcentaje:int):
+    #funciona
+    @staticmethod
+    def actualizar_porcentaje_avance(id, porcentaje:int):
         try: 
-            self.porcentaje_avance = porcentaje
-            self.save()
-        except Exception as e:
-            print(e)
-            
-    def incrementar_plazo(self, meses:int): 
-        try: 
-            self.plazo_meses = self.plazo_meses + meses
-            self.save()
+            obra = Obra.get(Obra.id==id)
+            obra.porcentaje_avance = porcentaje
+            obra.save()
+            print(f'Porcentaje d eobra actualizada: {porcentaje}%')
         except Exception as e:
             print(e)
     
-    def incrementar_mano_obra(self, num:int):
+    #funciona
+    @staticmethod    
+    def incrementar_plazo(id, meses:int): 
+        try: 
+            obra =Obra.get(Obra.id==id)
+            obra.plazo_meses = obra.plazo_meses + meses
+            obra.save()
+            print(f'Plazo de obra actualizado a: {obra.plazo_meses} meses totales')
+        except Exception as e:
+            print(e)
+    
+    #funciona
+    @staticmethod
+    def incrementar_mano_obra(id, num:int):
         # sumar num a la mano de obra que esta en clase contratacion 
         try: 
-            self.contratacion.mano_de_obra = self.contratacion.mano_de_obra + num
-            self.save()
+            obra= Obra.get(Obra.id==id)
+            contratacion_act = Contratacion.get(Contratacion.id== obra.contratacion.id)
+            contratacion_act.mano_de_obra = num
+            contratacion_act.save()
         except Exception as e:
             print(e)
-    
-    def finalizar_obra(self):
+
+     #funciona
+    @staticmethod
+    def finalizar_obra(id):
         #actualizar etapa de obra
         try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "Finalizado")
-            self.save()
+            obra= Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 1)
+            obra.save()
+            
+            Obra.actualizar_porcentaje_avance(id, 100)
+            
         except Exception as e:
             print(e)
     
-    def rescindir_obra(self):
-        try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "rescindido")
-            self.save()
-        except Exception as e:
+   #funciona
+    @staticmethod
+    def rescindir_obra(id):
+       try:
+            obra= Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 8)
+            obra.save()
+            print(f'Obra {obra.nombre}, rescindida')
+       except Exception as e:
             print(e)
             
     class Meta:
