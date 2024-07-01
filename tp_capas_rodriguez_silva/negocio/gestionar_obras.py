@@ -297,120 +297,158 @@ class GestionarObra(abc.ABC):
     @classmethod
     def obtener_indicadores(cls) -> None: 
         #Funciona
-        # try:
-        # # a. Listado de todas las áreas responsables.
-        #     listado_areas= AreaResponsable.select()
-        #     print('Áreas responsable:')
-        #     for i in listado_areas:
-        #         print(f'- {i.id} : {i.nombre_area}')
-        # except Exception as e:
-        #     print("Error: ", e)
+        try:
+        # a. Listado de todas las áreas responsables.
+            listado_areas= AreaResponsable.select()
+            print('Áreas responsable:')
+            for i in listado_areas:
+                print(f'- {i.id} : {i.nombre_area}')
+        except Exception as e:
+            print("Error: ", e)
         
         
         #Funciona   
-        # try:    
-        #     # b. Listado de todos los tipos de obra.
-        #     listado_tipo_obras=TipoObra.select()
-        #     print('Tipos de obras: ')
-        #     for i in listado_tipo_obras:
-        #         print(f'-{i.id}: {i.nombre}')
-        # except Exception as e:
-        #     print("Error: ", e)
+        try:    
+            # b. Listado de todos los tipos de obra.
+            listado_tipo_obras=TipoObra.select()
+            print('Tipos de obras: ')
+            for i in listado_tipo_obras:
+                print(f'-{i.id}: {i.nombre}')
+        except Exception as e:
+            print("Error: ", e)
         
         #Funciona
-        # print('Cantidad de obras por etapa:')
-        # # c. Cantidad de obras que se encuentran en cada etapa.
-        # try:  
-        #     obras_por_etapa = (Obra.select(EtapaObra.nombre, fn.COUNT(Obra.id).alias('cantidad'))
-        #                         .join(EtapaObra, on=(Obra.etapa_obra == EtapaObra.id))
-        #                         .group_by(EtapaObra.nombre))
+        print('Cantidad de obras por etapa:')
+        # c. Cantidad de obras que se encuentran en cada etapa.
+        try:  
+            obras_por_etapa = (Obra.select(EtapaObra.nombre, fn.COUNT(Obra.id).alias('cantidad'))
+                                .join(EtapaObra, on=(Obra.etapa_obra == EtapaObra.id))
+                                .group_by(EtapaObra.nombre))
             
-        #     for i in obras_por_etapa:
-        #         print(f'- {i.etapa_obra.nombre}: {i.cantidad}')
-        # except Exception as e:
-        #     print(f'Error al obtener la cantidad de obras por etapa: {e}')
+            for i in obras_por_etapa:
+                print(f'- {i.etapa_obra.nombre}: {i.cantidad}')
+        except Exception as e:
+            print(f'Error al obtener la cantidad de obras por etapa: {e}')
          
         #Funciona    
-        # print('Cantidad de obras y monto total de inversión por tipo de obra:')
-        # try:   
-        #     # d. Cantidad de obras y monto total de inversión por tipo de obra.
-        #     obras_por_tipo = (Obra.select(TipoObra.nombre,
-        #             fn.COUNT(Obra.id).alias('cantidad_obras'),
-        #             fn.SUM(Contratacion.monto).alias('monto_total_inversion'))
-        #         .join(TipoObra, on=(Obra.tipo_obra == TipoObra.id))
-        #         .join(Contratacion, on=(Obra.contratacion == Contratacion.id))
-        #         .group_by(TipoObra.nombre))
+        print('Cantidad de obras y monto total de inversión por tipo de obra:')
+        try:   
+            # d. Cantidad de obras y monto total de inversión por tipo de obra.
+            obras_por_tipo = (Obra.select(TipoObra.nombre,
+                    fn.COUNT(Obra.id).alias('cantidad_obras'),
+                    fn.SUM(Contratacion.monto).alias('monto_total_inversion'))
+                .join(TipoObra, on=(Obra.tipo_obra == TipoObra.id))
+                .join(Contratacion, on=(Obra.contratacion == Contratacion.id))
+                .group_by(TipoObra.nombre))
 
-        #     for obra in obras_por_tipo:
-        #         print(f'- {obra.tipo_obra.nombre}: {obra.cantidad_obras} obras - Monto total: ${obra.monto_total_inversion:.2f}')
-        # except Exception as e:
-        #     print("Error: ", e)
+            for obra in obras_por_tipo:
+                print(f'- {obra.tipo_obra.nombre}: {obra.cantidad_obras} obras - Monto total: ${obra.monto_total_inversion:.2f}')
+        except Exception as e:
+            print("Error: ", e)
             
             
-        #Funciona
-        # try:   
-        # # e. Listado de todos los barrios pertenecientes a las comunas 1, 2 y 3.
-        #     barrios_comunas = Predio.select(Predio.barrio).distinct().join(Obra, on=Predio.id == Obra.predio_id).where(
-        #             Obra.comuna.in_([1, 2, 3]))
-        #     print('Listado de barrios pertenecientes a las comunas 1, 2 y 3:')
-        #     for barrio in  barrios_comunas:
-        #         print(f'- {barrio.barrio}')
+        #Funciona   
+        #  e. Listado de todos los barrios pertenecientes a las comunas 1, 2 y 3.
+        print('Listado de barrios pertenecientes a las comunas 1,2 y 3')
+        try:
+            barrios_comunas = Predio.select(Predio.barrio).distinct().join(Obra, on=Predio.id == Obra.predio_id).where(
+                    Obra.comuna.in_([1, 2, 3]))
+            print('Listado de barrios pertenecientes a las comunas 1, 2 y 3:')
+            for barrio in  barrios_comunas:
+                print(f'- {barrio.barrio}')
                 
-        # except Exception as e:
-        #     print("Error: ", e)
+        except Exception as e:
+            print("Error: ", e)
        
         #funciona
         # f. Cantidad de obras finalizadas y su y monto total de inversión en la comuna 1.
-        # print("Cantidad de obras finalizadas y monto total de inversión en comuna 1:")
-        # try:
-        #     obras_finalizadas = (Obra
-        #         .select(fn.COUNT(Obra.id).alias('total_obras'),
-        #                 fn.SUM(Contratacion.monto).alias('monto'))
-        #         .join(Contratacion, on=(Obra.contratacion == Contratacion.id))
-        #         .join(EtapaObra, on=(Obra.etapa_obra == EtapaObra.id))
-        #         .where((Obra.comuna == 1) & (EtapaObra.nombre == 'Finalizada'))
-        #         .group_by(Obra.comuna)
-        #         .get())
+        print("Cantidad de obras finalizadas y monto total de inversión en comuna 1:")
+        try:
+            obras_finalizadas = (Obra
+                .select(fn.COUNT(Obra.id).alias('total_obras'),
+                        fn.SUM(Contratacion.monto).alias('monto'))
+                .join(Contratacion, on=(Obra.contratacion == Contratacion.id))
+                .join(EtapaObra, on=(Obra.etapa_obra == EtapaObra.id))
+                .where((Obra.comuna == 1) & (EtapaObra.nombre == 'Finalizada'))
+                .group_by(Obra.comuna)
+                .get())
             
-        #     print(f'- {obras_finalizadas.total_obras} obras - Monto total: ${obras_finalizadas.monto:.2f}')
-        # except Exception as e:
-        #     print("Error: ", e)
-        # # g. Cantidad de obras finalizadas en un plazo menor o igual a 24 meses.
-        # print("Cantidad de obras finalizadas en un plazo menor o igual a 24 meses:")
-        # try:
-           
-        #     obra_meses = Obra.select(fn.COUNT(Obra.id)).where(Obra.etapa_obra.nombre == 'Finalizada') & (Obra.plazo_meses >= 24)
-        #     print(f" {obra_meses}")
-        # except Exception as e:
-        #     print("Error: ", e)
+            print(f'- {obras_finalizadas.total_obras} obras - Monto total: ${obras_finalizadas.monto:.2f}')
+        except Exception as e:
+            print("Error: ", e)
+        
+        
+        
+        # g. Cantidad de obras finalizadas en un plazo menor o igual a 24 meses.
+        print("Cantidad de obras finalizadas en un plazo menor o igual a 24 meses:")
+        try:
+            obras_meses = (
+                Obra.select(fn.COUNT(Obra.id))
+                .join(EtapaObra)  # Une la tabla EtapaObra
+                .where(
+                    (EtapaObra.nombre == 'Finalizada') & (Obra.plazo_meses <= 24)
+                )
+                .scalar()
+            )
 
-        # # h. Porcentaje total de obras finalizadas.
-        # print("Porcentaje total de obras finalizadas:")
-        # try: 
-        #     total_obras = Obra.select().count()
-        #     obras_finalizadas = Obra.select().where(Obra.etapa_obra.id == 1).count()
+            if obras_meses is not None:  # Manejo de posibles valores nulos
+                print(f"Cantidad de obras: {obras_meses}")
+            else:
+                print("No se encontraron obras finalizadas en el plazo especificado.")
 
-        #     porcentaje_finalizadas = (obras_finalizadas / total_obras) * 100
+        except Exception as e:
+            print(f"Error al consultar la base de datos: {e}") 
 
-        #     print(f" {porcentaje_finalizadas:.2f}%")
+
+        #Funciona
+        #  h. Porcentaje total de obras finalizadas.
+        print("Porcentaje total de obras finalizadas:")
+        try:
+            total_obras = Obra.select().count()
+            obras_finalizadas = Obra.select().where(Obra.etapa_obra_id == 1).count()
+
+            if total_obras == 0:
+                print("No hay obras registradas.")
+            else:
+                porcentaje_finalizadas = (obras_finalizadas / total_obras) * 100
+                print(f"{porcentaje_finalizadas:.2f}%")
+
+        except Exception as e:
+            print(f"Error al consultar la base de datos: {e}")
+      
+      
+        #funciona
+        # i. Cantidad total de mano de obra empleada.
+        print("Cantidad total de mano de obra empleada:")
+        try:
+            mano_obra_total = (
+                Obra.select(fn.SUM(Contratacion.mano_de_obra))  # Cambio aquí
+                .join(Contratacion)                           # Asegura el JOIN a Contratacion
+                .scalar() 
+            )
+
+            if mano_obra_total is not None:
+                print(f"{mano_obra_total}")
+            else:
+                print("No se encontró mano de obra empleada.")
+
+        except Exception as e:
+           print(f"Error al consultar la base de datos: {e}")
         
-        # except Exception as e:
-        #     print("Error: ", e)
-        
-        # # i. Cantidad total de mano de obra empleada.
-        # print("Cantidad total de mano de obra empleada:")
-        # try:
-        #     mano_obra_total = Obra.select(fn.SUM(Obra.contratacion.mano_de_obra))
-        #     print(f" {mano_obra_total}")
-            
-        # except Exception as e:
-        #     print("Error: ", e)
-        
-        
-        # # j. Monto total de inversión.
-        # print("Monto total de inversión:")
-        # try:           
-        #     monto_inversion_total = Obra.select(fn.SUM(Obra.contratacion.monto))
-        #     print(f" {monto_inversion_total}")
-        # except Exception as e:
-        #     print("Error: ", e)
+        #funciona
+        #  j. Monto total de inversión.
+        print("Monto total de inversión:")
+        try:
+            monto_inversion_total = (
+                Obra.select(fn.SUM(Contratacion.monto))  # Corrección aquí
+                .join(Contratacion)                     # Asegura el JOIN a Contratacion
+                .scalar()
+            )
+
+            if monto_inversion_total is not None:
+                print(f"{monto_inversion_total}")
+            else:
+                print("No se encontró información sobre montos de inversión.")
+
+        except Exception as e:
+            print(f"Error al consultar la base de datos: {e}")

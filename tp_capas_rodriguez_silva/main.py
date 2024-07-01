@@ -115,15 +115,13 @@ async def main():
     
     # cargar_data_subtabla_importante()
     
-    
-    GestionarObra.obtener_indicadores()
   
   
-    # obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
-    # if obra_hardcodeada != None:    
-    #   pasar_por_etapas(obra_hardcodeada)
-    # else: 
-    #   print('No se pudo crear la obra')
+    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
+    if obra_hardcodeada != None:    
+      pasar_por_etapas(obra_hardcodeada)
+    else: 
+      print('No se pudo crear la obra')
      
       
     # obra_nueva= GestionarObra.nueva_obra() 
@@ -138,7 +136,8 @@ async def main():
     # except Exception as e:
       
     #   print(e)
-  
+   
+    GestionarObra.obtener_indicadores()
     
     
     GestionarObra.cerrarConex()
