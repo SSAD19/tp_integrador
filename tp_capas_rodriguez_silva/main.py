@@ -113,16 +113,38 @@ async def main():
     # except Exception as e:
     #   print(e)
     
-    obra_hardcodeada = Obra.get(Obra.id==4)
+    obra_hardcodeada = Obra.get(Obra.id==5)
     if obra_hardcodeada != None:
       
-      tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
-      contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
-      obra_hardcodeada.iniciar_contratacion(contratacion_data, obra_hardcodeada.id)
+      # tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
+      # contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
+      # obra_hardcodeada.iniciar_contratacion(contratacion_data, obra_hardcodeada.id)
       
-      # empresa = Empresa.create(razon_social='another + SA')
+      # empresa = Empresa.get_or_create(razon_social='another + SA')[0]
       # monto = 985421859.00
-      # obra_hardcodeada.adjudicar_obra(empresa, monto)
+      # obra_hardcodeada.adjudicar_obra(obra_hardcodeada.id, empresa, monto)
+      
+      #Obra.iniciar_obra(obra_hardcodeada.id)
+      
+    
+      # porcentaje = 30
+      # Obra.actualizar_porcentaje_avance(obra_hardcodeada.id, por) 
+    
+            
+      # while True:
+      #     porcentaje = input('Ingrese el valor en forma de integer del porcentaje (0-100): ')
+      #     if porcentaje.isdigit() and 0 <= int(porcentaje) <= 100:
+      #         Obra.actualizar_porcentaje_avance(obra_hardcodeada.id, int(porcentaje))
+      #         break
+      #     else:
+      #         print("El calor introducido no es válido. Por favor introduzca un valor entre 0 y 100")
+    
+      #Obra.incrementar_plazo(obra_hardcodeada.id, 4)
+      try:
+        Obra.incrementar_mano_obra(obra_hardcodeada.id, 12)
+      except Exception as e:
+        
+        print(e)
     else: 
       print('No se pudo crear la obra')
    
@@ -140,7 +162,7 @@ if __name__ == '__main__':
     asyncio.run(main()) 
   
   except ModuleNotFoundError as e:
-    print("Falló la importación de módulos, comuníquese con el desarrollador") 
+    print("Falló la importación de módulos, comuníquese con el desarrollador")
   
   except Exception as e:
     print("Error:", e)

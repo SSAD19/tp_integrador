@@ -105,7 +105,7 @@ class Obra(BaseModel):
     
     
     
-   #TFunciona
+   #Funciona
     @staticmethod
     def nuevo_proyecto(obra_data:dict):
         try:      
@@ -115,6 +115,7 @@ class Obra(BaseModel):
             print('Error en nuevo_proyecto', e)
             return None
     
+    #Funciona
     @staticmethod
     def iniciar_contratacion(data, id):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
@@ -126,45 +127,60 @@ class Obra(BaseModel):
           except Exception as e:
             print(e)
     
+    #Funciona
     @staticmethod
     def adjudicar_obra(id, empresa:Empresa, monto:float):
         #CREAR O BUSCAR EMPRESA (?)
         try:
-            obra =Obra.get(Obra.id==id)
-            obra.contratacion.empresa=empresa
-            obra.contratacion.monto=monto
+            obra = Obra.get(Obra.id == id)
+            obra.contratacion.empresa = empresa
+            obra.contratacion.monto = monto
             obra.contratacion.save()
             
         except Exception as e:
             print(e)
     
-    def iniciar_obra(self):
+    #Funciona
+    @staticmethod
+    def iniciar_obra(id):
         #MODIFICAR LA ETAPA DE OBRA O CREAR CAMPO DE FECHA DE INICI
         try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
-            self.save()
+            obra = Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 5)
+            obra.save()
         except Exception as e:
             print(e)
     
-    def actualizar_porcentaje_avance(self, porcentaje:int):
+    #funciona
+    @staticmethod
+    def actualizar_porcentaje_avance(id, porcentaje:int):
         try: 
-            self.porcentaje_avance = porcentaje
-            self.save()
-        except Exception as e:
-            print(e)
-            
-    def incrementar_plazo(self, meses:int): 
-        try: 
-            self.plazo_meses = self.plazo_meses + meses
-            self.save()
+            obra = Obra.get(Obra.id==id)
+            obra.porcentaje_avance = porcentaje
+            obra.save()
+            print(f'Porcentaje d eobra actualizada: {porcentaje}%')
         except Exception as e:
             print(e)
     
-    def incrementar_mano_obra(self, num:int):
+    #funciona
+    @staticmethod    
+    def incrementar_plazo(id, meses:int): 
+        try: 
+            obra =Obra.get(Obra.id==id)
+            obra.plazo_meses = obra.plazo_meses + meses
+            obra.save()
+            print(f'Plazo de obra actualizado a: {obra.plazo_meses} meses totales')
+        except Exception as e:
+            print(e)
+    
+    @staticmethod
+    def incrementar_mano_obra(id, num:int):
         # sumar num a la mano de obra que esta en clase contratacion 
         try: 
-            self.contratacion.mano_de_obra = self.contratacion.mano_de_obra + num
-            self.save()
+            obra= Obra.get(Obra.id==id)
+            contratacion_act = Contratacion.get(Contratacion.id== obra.contratacion.id)
+            contratacion_act.mano_de_obra = num
+            contratacion_act.save()
         except Exception as e:
             print(e)
     
