@@ -132,12 +132,18 @@ async def main():
     cargar_data_subtabla_importante()
     
   
-  
     obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada() 
     if obra_hardcodeada != None:    
       pasar_por_etapas(obra_hardcodeada)
     else: 
       print('No se pudo crear la obra')
+     
+    obra_nueva2 = GestionarObra.nueva_obra() 
+    if obra_nueva2 != None:    
+      pasar_por_etapas(obra_nueva2)
+    else: 
+      print('No se pudo crear la obra')
+     
      
           
     try:
