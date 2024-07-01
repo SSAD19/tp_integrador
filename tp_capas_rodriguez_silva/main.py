@@ -62,6 +62,10 @@ def cargar_data_subtabla_importante():
     EtapaObra.create(nombre='rescindido')
     EtapaObra.create(nombre='nuevo proyecto')
     print('nuevas etapas obras creadas')
+ 
+  except IntegrityError as e:
+        print(f"Error de integridad: No se pudieron crear las etapas de obra. Es posible que ya existan etapas con los mismos nombres.")
+ 
   except Exception as e: 
     print('yNo fue posible crear las subetapas')
 
@@ -97,6 +101,18 @@ def pasar_por_etapas(obra:Obra):
       Obra.incrementar_mano_obra(obra.id, 12)
       
       Obra.finalizar_obra(obra.id)
+      
+  except DoesNotExist as e:
+      if isinstance(e.model, TipoContratacion):
+          print(f"Error: No se encontró el tipo de contratación 'Contratacion Menor'.")
+      elif isinstance(e.model, Empresa):
+          print(f"Error: No se encontró la empresa 'another + SA'.")
+      else:
+          print(f"Error: No se encontró el registro necesario: {e}")
+
+  except ValueError as e:
+        print(f"Error de valor: {e}")
+        
   except Exception as e:  
     print(e) 
 
@@ -107,13 +123,13 @@ async def main():
     GestionarObra.conectar_db()
         
     #Creo las tablas necesarias para mi DB desde mis modelos
-    # GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
+    GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-    #  #Extrae los datos del dataSet 
-    # await extraccion_Data()
-    # # print('data completamente cargada')
+     #Extrae los datos del dataSet 
+    await extraccion_Data()
+    # print('data completamente cargada')
     
-    # cargar_data_subtabla_importante()
+    cargar_data_subtabla_importante()
     
   
   
@@ -123,27 +139,18 @@ async def main():
     else: 
       print('No se pudo crear la obra')
      
+          
+    try:
+      Obra.rescindir_obra(1)
       
-    # obra_nueva= GestionarObra.nueva_obra() 
-    # if obra_nueva != None:    
-    #   pasar_por_etapas(obra_nueva)
-    # else: 
-    #   print('No se pudo crear la obra')
-      
-    # try:
-    #   Obra.rescindir_obra(1)
-      
-    # except Exception as e:
-      
-    #   print(e)
+    except Exception as e:
+      print(e)
    
     GestionarObra.obtener_indicadores()
     
     
     GestionarObra.cerrarConex()
     input("presione enter para culminar")
-
-
 
  
  
