@@ -173,6 +173,7 @@ class Obra(BaseModel):
         except Exception as e:
             print(e)
     
+    #funciona
     @staticmethod
     def incrementar_mano_obra(id, num:int):
         # sumar num a la mano de obra que esta en clase contratacion 
@@ -183,20 +184,30 @@ class Obra(BaseModel):
             contratacion_act.save()
         except Exception as e:
             print(e)
-    
-    def finalizar_obra(self):
+
+     #funciona
+    @staticmethod
+    def finalizar_obra(id):
         #actualizar etapa de obra
         try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "Finalizado")
-            self.save()
+            obra= Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 1)
+            obra.save()
+            
+            Obra.actualizar_porcentaje_avance(id, 100)
+            
         except Exception as e:
             print(e)
     
-    def rescindir_obra(self):
-        try:
-            self.etapa_obra = EtapaObra.get(EtapaObra.nombre == "rescindido")
-            self.save()
-        except Exception as e:
+   #funciona
+    @staticmethod
+    def rescindir_obra(id):
+       try:
+            obra= Obra.get(Obra.id==id)
+            obra.etapa_obra = EtapaObra.get(EtapaObra.id == 8)
+            obra.save()
+            print(f'Obra {obra.nombre}, rescindida')
+       except Exception as e:
             print(e)
             
     class Meta:

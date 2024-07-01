@@ -140,8 +140,13 @@ async def main():
       #         print("El calor introducido no es válido. Por favor introduzca un valor entre 0 y 100")
     
       #Obra.incrementar_plazo(obra_hardcodeada.id, 4)
+      
+      #Obra.incrementar_mano_obra(obra_hardcodeada.id, 12)
+      
+      #Obra.finalizar_obra(obra_hardcodeada.id)
       try:
-        Obra.incrementar_mano_obra(obra_hardcodeada.id, 12)
+        Obra.rescindir_obra(3)
+        
       except Exception as e:
         
         print(e)
