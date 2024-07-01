@@ -58,10 +58,12 @@ async def extraccion_Data():
 
 
 def cargar_data_subtabla_importante():
-  EtapaObra.create(nombre='rescindido')
-  
-  EtapaObra.create(nombre='nuevo proyecto')
-  print('nuevas etapas obras creadas')
+  try:
+    EtapaObra.create(nombre='rescindido')
+    EtapaObra.create(nombre='nuevo proyecto')
+    print('nuevas etapas obras creadas')
+  except Exception as e: 
+    print('yNo fue posible crear las subetapas')
 
 #TODO:  PASAR TODO LO DE LAS ETAPAS
 def pasar_por_etapas(obra:Obra):
@@ -82,13 +84,12 @@ async def main():
     #Creo las tablas necesarias para mi DB desde mis modelos
     GestionarObra.mapear_orm(AreaResponsable, TipoObra, TipoContratacion, Predio, Empresa, Contratacion, Licitacion, EtapaObra, Obra)
  
-    # #Extrae los datos del dataSet 
-    await extraccion_Data()
-    print('data completamente cargada')
+    # # #Extrae los datos del dataSet 
+    # await extraccion_Data()
+    # print('data completamente cargada')
     
-    cargar_data_subtabla_importante()
-    
-    
+    # cargar_data_subtabla_importante()
+        
     # obra_nueva= GestionarObra.nueva_obra() 
     
     # tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Obra Publica')  
@@ -99,18 +100,27 @@ async def main():
     # empresa = Empresa.create(razon_social='Cualquiera SA')
     # monto = 17865009.00
     # obra_nueva.adjudicar_obra(empresa, monto)
-    
-    
-    obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
+  
+    try:    
+      #obra_por_input=GestionarObra.nueva_obra()
+      obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
+      if obra_hardcodeada == None :
+        print('No se pudo crear la obra')
+      else:
+        print('Obra creada')
+    except Exception as e:
+      print(e)
     
     if obra_hardcodeada != None:
+      
       tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
       contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
+      contratacion = Contratacion.create()
       obra_hardcodeada.iniciar_contratacion(contratacion_data)
       
-      empresa = Empresa.create(razon_social='another + SA')
-      monto = 985421859.00
-      obra_hardcodeada.adjudicar_obra(empresa, monto)
+      # empresa = Empresa.create(razon_social='another + SA')
+      # monto = 985421859.00
+      # obra_hardcodeada.adjudicar_obra(empresa, monto)
     else: 
       print('No se pudo crear la obra')
    

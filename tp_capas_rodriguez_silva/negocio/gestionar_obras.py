@@ -198,8 +198,9 @@ class GestionarObra(abc.ABC):
             for a in areas_Todas:
                 print(a.nombre_area)
                 
-            area_responsable = (input('Indique  # el area responsable: '))    
-            area =  AreaResponsable.select().where(AreaResponsable.nombre_area==area_responsable).get()
+            area_responsable = input('Indique  # el area responsable: ') 
+            area =  AreaResponsable.get_or_none(AreaResponsable.nombre_area==area_responsable)
+            
             
             licitacion = Licitacion.create(
                                         expediente=expediente, 
@@ -208,29 +209,31 @@ class GestionarObra(abc.ABC):
                                         descripcion=descripcion
                                         )
             
-            etapa_nueva = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
+            
+            
+            etapa= EtapaObra.get_or_none(EtapaObra.nombre == "nuevo proyecto")
             entorno= input('Indique entorno de la obra: ')
             nombre = input('Indique nombre de la obra: ')
             
             tipo_Todas = TipoObra.select(TipoObra.nombre)
             for a in tipo_Todas:
                 print(a.nombre)
+                
             tipo = input('Indique tipo de obra: ')
-            tipo_obra = TipoObra.select().where(TipoObra.nombre==tipo)
-            
-            tipo_obra = tipo_obra
+            tipo_obra= TipoObra.get_or_none(TipoObra.nombre == tipo)
+          
             
             predio_Todas = Predio.select(Predio.barrio)
             for a in predio_Todas:
                 print(a.barrio)
                 
             predio= input('Indique el barrio donde se ejecutará la obra: ')
-            predio_buscar= Predio.select().where(Predio.barrio==predio)
-            predio = predio_buscar
+            predio = Predio.get_or_none(Predio.barrio==predio)
+            
             comuna=int(input('Indique el número de la comuna donde se ejecutará la obra: '))
             direccion =  input('Indique la dirección donde se ejecutará la obra: ')
             plazo_meses=int(input('indique el numero de meses de contrato estimado: '))
-            etapa = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
+         
             
             nueva_obra_data = {
                     'entorno': entorno,
@@ -256,39 +259,37 @@ class GestionarObra(abc.ABC):
     @classmethod 
     def nueva_obra_hardcodeada(cls) -> Obra: 
         try:
-            etapa = EtapaObra.select().where(EtapaObra.nombre == "nuevo proyecto")
+            etapa = EtapaObra.get_or_none(EtapaObra.nombre == "nuevo proyecto")
            
-            area =  AreaResponsable.select().where(AreaResponsable.nombre_area=='Ministerio de Salud')
+            area =  AreaResponsable.get_or_none(AreaResponsable.nombre_area=='Ministerio de Salud')
             licitacion = Licitacion.create(
-                    expediente='Ex896482-98', 
+                    expediente='Ex896482-75', 
                     licitacion_anio=date.today().year,
                     area_responsable=area,
-                    descripcion='Reparación rieles'
+                    descripcion='Reparación ruberia'
                     )
-            tipo_obra = TipoObra.select().where(TipoObra.nombre=='Arquitectura')
-            predio_buscar= Predio.select().where(Predio.barrio=='Saavedra')
-           
+            tipo_obra = TipoObra.get(TipoObra.nombre=='Arquitectura')
+            predio_buscar= Predio.get(Predio.barrio=='Saavedra')
             obra_data = {
-                    'entorno': 'Áreas del tren',
-                    'nombre': 'Saavedra_vias123',
+                    'entorno': 'Tubería gas',
+                    'nombre': 'Saavedra_vias125',
                     'tipo_obra': tipo_obra ,
                     'etapa_obra': etapa,
                     'licitacion': licitacion,
                     'predio': predio_buscar,
                     'comuna': 12,
                     'direccion': 'Calle plaza',
-                    'plazo_meses': 8,
+                    'plazo_meses': 2,
                     'porcentaje_avance': 0
                  }
             
+            obra_nueva = Obra()
             obra_nueva = Obra.nuevo_proyecto(obra_data)
             return obra_nueva
         
         except Exception as e:
             print("Error en nueva_obra_hardcodeada: ", e)
        
-      
-      
       
     
     #TODO: desarrollar

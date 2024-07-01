@@ -106,10 +106,11 @@ class Obra(BaseModel):
     
     
     #TODO: Revisar funciones 
-    def nuevo_proyecto(self, obra_data):
-        try:           
-           obra = Obra.create(**obra_data) 
-           return obra       
+    @staticmethod
+    def nuevo_proyecto(obra_data:dict):
+        try:      
+            nueva_obra = Obra.create(**obra_data) 
+            return nueva_obra       
         except Exception as e:
             print('Error en nuevo_proyecto', e)
             return None
