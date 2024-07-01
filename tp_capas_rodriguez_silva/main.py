@@ -101,22 +101,24 @@ async def main():
     # monto = 17865009.00
     # obra_nueva.adjudicar_obra(empresa, monto)
   
-    try:    
-      #obra_por_input=GestionarObra.nueva_obra()
-      obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
-      if obra_hardcodeada == None :
-        print('No se pudo crear la obra')
-      else:
-        print('Obra creada')
-    except Exception as e:
-      print(e)
+    # try:    
+    #   obra_por_input=GestionarObra.nueva_obra()
+    #   obra_hardcodeada = GestionarObra.nueva_obra_hardcodeada()
     
+    #   if obra_hardcodeada == None :
+    #     print('No se pudo crear la obra')
+    #   else:
+    #     print('Obra creada')
+    
+    # except Exception as e:
+    #   print(e)
+    
+    obra_hardcodeada = Obra.get(Obra.id==4)
     if obra_hardcodeada != None:
       
       tipo = TipoContratacion.select().where(TipoContratacion.nombre=='Contratacion Menor')  
       contratacion_data ={'nro_contratacion' : '1299/2024','tipo_contratacion':tipo,}
-      contratacion = Contratacion.create()
-      obra_hardcodeada.iniciar_contratacion(contratacion_data)
+      obra_hardcodeada.iniciar_contratacion(contratacion_data, obra_hardcodeada.id)
       
       # empresa = Empresa.create(razon_social='another + SA')
       # monto = 985421859.00

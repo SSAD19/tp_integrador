@@ -105,7 +105,7 @@ class Obra(BaseModel):
     
     
     
-    #TODO: Revisar funciones 
+   #TFunciona
     @staticmethod
     def nuevo_proyecto(obra_data:dict):
         try:      
@@ -115,24 +115,25 @@ class Obra(BaseModel):
             print('Error en nuevo_proyecto', e)
             return None
     
-    def iniciar_contratacion(self, data):
+    @staticmethod
+    def iniciar_contratacion(data, id):
         #CREAR UNA CONTRATACION ENLAZANDO AL ID DE OBRA
-        try:
+          try:
             contratacion = Contratacion.create(**data)
-            self.contratacion=contratacion
-            self.contratacion.save()
-            
-        except Exception as e:
+            obra = Obra.get(Obra.id == id)
+            obra.contratacion = contratacion
+            obra.save()
+          except Exception as e:
             print(e)
-        
     
-    def adjudicar_obra(self, empresa:Empresa, monto:float):
+    @staticmethod
+    def adjudicar_obra(id, empresa:Empresa, monto:float):
         #CREAR O BUSCAR EMPRESA (?)
         try:
-            self.contratacion.empresa=empresa
-            self.contratacion.monto=monto
-            self.contratacion.save()
-         
+            obra =Obra.get(Obra.id==id)
+            obra.contratacion.empresa=empresa
+            obra.contratacion.monto=monto
+            obra.contratacion.save()
             
         except Exception as e:
             print(e)

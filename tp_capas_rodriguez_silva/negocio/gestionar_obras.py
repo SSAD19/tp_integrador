@@ -263,7 +263,7 @@ class GestionarObra(abc.ABC):
            
             area =  AreaResponsable.get_or_none(AreaResponsable.nombre_area=='Ministerio de Salud')
             licitacion = Licitacion.create(
-                    expediente='Ex896482-75', 
+                    expediente='Ex896482-78', 
                     licitacion_anio=date.today().year,
                     area_responsable=area,
                     descripcion='Reparación ruberia'
@@ -272,7 +272,7 @@ class GestionarObra(abc.ABC):
             predio_buscar= Predio.get(Predio.barrio=='Saavedra')
             obra_data = {
                     'entorno': 'Tubería gas',
-                    'nombre': 'Saavedra_vias125',
+                    'nombre': 'Saavedra_vias126',
                     'tipo_obra': tipo_obra ,
                     'etapa_obra': etapa,
                     'licitacion': licitacion,
